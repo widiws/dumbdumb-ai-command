@@ -433,7 +433,7 @@ export function DashboardContent() {
               viewport={{ once: true, margin: "-60px", amount: 0.1 }}
               variants={stagger(0.07)}
             >
-              {agents.map((a) => (
+              {liveAgents.map((a) => (
                 <m.div
                   key={a.name}
                   variants={fadeUpScale()}
