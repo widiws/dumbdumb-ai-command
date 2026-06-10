@@ -1,4 +1,3 @@
-import heroRobot from "@/assets/hero-robot.png";
 import {
   Bot, ClipboardList, FileText, Zap, Plus, Send, Terminal, FileBarChart, BarChart3,
   Network, ChevronRight, Server, Database, Cpu, Wifi, Rocket, CheckCircle2,
@@ -164,14 +163,6 @@ export function DashboardContent() {
           <span className="w-1.5 h-1.5 rounded-full bg-[var(--success)] animate-pulse" /> Live Mode <ChevronRight className="w-3 h-3" />
         </button>
 
-        <div className="hidden md:block absolute right-0 -top-6 w-[38%] h-[calc(100%+2rem)] pointer-events-none z-10 overflow-hidden [mask-image:linear-gradient(to_right,transparent,black_18%)]">
-          <img
-            src={heroRobot}
-            alt="AI Robot Assistant"
-            className="h-full w-full object-contain object-right motion-safe:animate-[float_6s_ease-in-out_infinite]"
-            style={{ willChange: "transform" }}
-          />
-        </div>
 
         <div className="relative z-20 md:max-w-[66%] space-y-5">
           <div className="card-soft px-6 py-5 flex items-start gap-4">
