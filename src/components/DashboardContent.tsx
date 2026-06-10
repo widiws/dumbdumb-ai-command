@@ -205,8 +205,8 @@ export function DashboardContent() {
                 </span>
                 AI Agent Network
               </h2>
-              <button className="text-xs font-medium px-3 py-2 rounded-xl border border-border hover:bg-secondary transition inline-flex items-center gap-1">
-                Lihat Semua Agent <ChevronRight className="w-3 h-3" />
+              <button className="text-xs font-medium px-3 py-2 rounded-xl border border-border hover:bg-secondary transition-all duration-300 ease-[cubic-bezier(0.25,0.46,0.45,0.94)] inline-flex items-center gap-1 group">
+                Lihat Semua Agent <ChevronRight className="w-3 h-3 transition-transform duration-300 ease-[cubic-bezier(0.25,0.46,0.45,0.94)] group-hover:translate-x-0.5" />
               </button>
             </div>
             <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-6 gap-3">
