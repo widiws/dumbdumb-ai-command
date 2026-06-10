@@ -197,7 +197,16 @@ export function DashboardContent() {
       <div className="grid grid-cols-1 xl:grid-cols-[1fr_320px] gap-6">
         <div className="space-y-6 min-w-0">
           {/* Agent Network */}
-          <section className="card-soft p-6">
+          <motion.section
+            className="card-soft p-6"
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: "-60px" }}
+            variants={{
+              hidden: { opacity: 0, y: 30 },
+              visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: [0.25, 0.46, 0.45, 0.94] } },
+            }}
+          >
             <div className="flex items-center justify-between mb-5">
               <h2 className="flex items-center gap-2 font-bold text-lg">
                 <span className="w-8 h-8 rounded-xl gradient-primary flex items-center justify-center">
