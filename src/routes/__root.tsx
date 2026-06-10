@@ -85,6 +85,10 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
       { name: "twitter:site", content: "@Lovable" },
+      { name: "twitter:title", content: "DumbDumb Corp AI" },
+      { name: "twitter:description", content: "AI Corporation Command Center" },
+      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/2c4a7b1a-8edb-4295-a7e7-7ba275c041a5/id-preview-6390fa7b--28f0b116-d3e8-40a7-984c-c15d18074ad0.lovable.app-1781071868585.png" },
+      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/2c4a7b1a-8edb-4295-a7e7-7ba275c041a5/id-preview-6390fa7b--28f0b116-d3e8-40a7-984c-c15d18074ad0.lovable.app-1781071868585.png" },
     ],
     links: [
       { rel: "preconnect", href: "https://fonts.googleapis.com" },
