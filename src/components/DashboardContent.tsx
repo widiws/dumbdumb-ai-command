@@ -131,63 +131,72 @@ function PerfChart() {
 export function DashboardContent() {
   return (
     <main className="px-6 lg:px-8 py-6 space-y-6">
-      {/* Hero */}
-      <section className="relative overflow-hidden rounded-3xl gradient-hero border border-border px-6 lg:px-8 pt-6 pb-4 min-h-[200px]">
-        <button className="absolute top-5 right-6 z-20 flex items-center gap-2 px-4 py-2 rounded-full bg-card border border-[oklch(0.85_0.12_165)]/50 text-[oklch(0.42_0.14_165)] font-semibold text-xs shadow-[var(--shadow-card)] hover:scale-105 transition">
+      {/* Hero + KPIs unified top zone */}
+      <section className="relative">
+        {/* Live Mode (top-right) */}
+        <button className="absolute top-0 right-0 z-30 flex items-center gap-2 px-4 py-2 rounded-full bg-card border border-[oklch(0.85_0.12_165)]/50 text-[oklch(0.42_0.14_165)] font-semibold text-xs shadow-[var(--shadow-card)] hover:scale-105 transition">
           <span className="w-1.5 h-1.5 rounded-full bg-[var(--success)] animate-pulse" /> Live Mode <ChevronRight className="w-3 h-3" />
         </button>
-        <div className="relative z-10 flex items-start gap-5 max-w-[62%]">
-          <div className="w-14 h-14 rounded-2xl bg-card flex items-center justify-center shadow-[var(--shadow-card)] shrink-0">
-            <svg viewBox="0 0 24 24" className="w-6 h-6" fill="url(#sg)">
-              <defs>
-                <linearGradient id="sg" x1="0" y1="0" x2="1" y2="1">
-                  <stop offset="0%" stopColor="oklch(0.7 0.18 265)" />
-                  <stop offset="100%" stopColor="oklch(0.72 0.18 295)" />
-                </linearGradient>
-              </defs>
-              <path d="M12 2l2.4 6.6L21 11l-6.6 2.4L12 20l-2.4-6.6L3 11l6.6-2.4z" />
-            </svg>
-          </div>
-          <div>
-            <h1 className="text-3xl lg:text-[34px] font-bold leading-tight">
-              Selamat datang, <span className="text-gradient">Widi</span> <span>👋</span>
-            </h1>
-            <p className="mt-2 text-muted-foreground text-[14px] leading-relaxed">
-              Ini adalah pusat kendali semua AI Agent dan operasional corp kamu.
-            </p>
-          </div>
-        </div>
-        <div className="absolute -right-4 -top-2 bottom-0 w-[44%] pointer-events-none">
-          <div className="absolute inset-0 bg-gradient-to-l from-[oklch(0.86_0.1_280)]/40 via-[oklch(0.9_0.06_240)]/20 to-transparent blur-2xl" />
-          <img src={heroRobot} alt="AI Robot Assistant"
+
+        {/* Robot illustration on the right (overlaps hero + kpi vertical zone) */}
+        <div className="hidden md:block absolute right-0 -top-4 w-[34%] h-[calc(100%+1rem)] pointer-events-none z-10">
+          <div className="absolute inset-0 bg-gradient-to-l from-[oklch(0.86_0.1_280)]/30 via-[oklch(0.9_0.06_240)]/15 to-transparent blur-3xl" />
+          <img
+            src={heroRobot}
+            alt="AI Robot Assistant"
             className="relative z-10 h-full w-full object-contain object-right drop-shadow-2xl"
-            style={{ animation: "float 6s ease-in-out infinite" }} />
+            style={{ animation: "float 6s ease-in-out infinite" }}
+          />
+        </div>
+
+        {/* Left column: greeting card + KPI grid */}
+        <div className="relative z-20 md:max-w-[66%] space-y-5">
+          {/* Greeting card */}
+          <div className="card-soft px-6 py-5 flex items-start gap-4">
+            <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-[oklch(0.96_0.04_280)] to-[oklch(0.94_0.06_240)] flex items-center justify-center shrink-0">
+              <svg viewBox="0 0 24 24" className="w-7 h-7" fill="url(#sg)">
+                <defs>
+                  <linearGradient id="sg" x1="0" y1="0" x2="1" y2="1">
+                    <stop offset="0%" stopColor="oklch(0.7 0.18 265)" />
+                    <stop offset="100%" stopColor="oklch(0.72 0.18 295)" />
+                  </linearGradient>
+                </defs>
+                <path d="M12 2l2.4 6.6L21 11l-6.6 2.4L12 20l-2.4-6.6L3 11l6.6-2.4z" />
+              </svg>
+            </div>
+            <div className="min-w-0">
+              <h1 className="text-3xl lg:text-[34px] font-bold leading-tight">
+                Selamat datang, <span className="text-gradient">Widi</span> <span>👋</span>
+              </h1>
+              <p className="mt-1.5 text-muted-foreground text-[14px] leading-relaxed">
+                Ini adalah pusat kendali semua AI Agent dan operasional corp kamu.
+              </p>
+            </div>
+          </div>
+
+          {/* KPIs */}
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+            {kpis.map((k) => (
+              <div key={k.label} className="card-soft card-soft-hover p-4">
+                <div className="flex items-start gap-3">
+                  <div className="w-11 h-11 rounded-2xl flex items-center justify-center shadow-md shrink-0"
+                    style={{ background: k.gradient }}>
+                    <k.icon className="w-5 h-5 text-white" />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-[11px] text-muted-foreground font-medium">{k.label}</p>
+                    <p className="text-2xl font-bold mt-0.5">{k.value}</p>
+                    <p className="text-[10px] text-[var(--success)] font-semibold mt-0.5 flex items-center gap-1">
+                      <span>↗</span> {k.delta}
+                    </p>
+                  </div>
+                </div>
+                <Sparkline stroke={k.stroke} id={String(k.label).replace(/\s+/g, "")} />
+              </div>
+            ))}
+          </div>
         </div>
         <style>{`@keyframes float { 0%,100% { transform: translateY(0) } 50% { transform: translateY(-10px) } }`}</style>
-      </section>
-
-
-
-      {/* KPIs */}
-      <section className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        {kpis.map((k) => (
-          <div key={k.label} className="card-soft card-soft-hover p-5">
-            <div className="flex items-start gap-4">
-              <div className="w-12 h-12 rounded-2xl flex items-center justify-center shadow-md shrink-0"
-                style={{ background: k.gradient }}>
-                <k.icon className="w-5 h-5 text-white" />
-              </div>
-              <div className="flex-1 min-w-0">
-                <p className="text-xs text-muted-foreground font-medium">{k.label}</p>
-                <p className="text-3xl font-bold mt-1">{k.value}</p>
-                <p className="text-[11px] text-[var(--success)] font-semibold mt-1 flex items-center gap-1">
-                  <span>↗</span> {k.delta}
-                </p>
-              </div>
-            </div>
-            <Sparkline stroke={k.stroke} id={String(k.label).replace(/\s+/g, "")} />
-          </div>
-        ))}
       </section>
 
       <div className="grid grid-cols-1 xl:grid-cols-[1fr_320px] gap-6">
