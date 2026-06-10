@@ -3,6 +3,7 @@ import {
   Network, ChevronRight, Server, Database, Cpu, Wifi, Rocket, CheckCircle2,
 } from "lucide-react";
 import { LazyMotion, domAnimation, m, useReducedMotion, type Variants } from "framer-motion";
+import heroRobot from "@/assets/hero-robot.png";
 
 const EASE = [0.25, 0.46, 0.45, 0.94] as const;
 // Hanya aktifkan will-change saat elemen benar-benar dianimasikan masuk.
