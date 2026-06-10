@@ -160,7 +160,17 @@
     transition-duration: 0.001ms !important;
     scroll-behavior: auto !important;
   }
-  .card-soft-hover:hover {
+  .card-soft-hover:hover,
+  .agent-card:hover {
     transform: none !important;
   }
 }
+
+.agent-card {
+  transition: box-shadow 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94), border-color 0.3s ease;
+}
+.agent-card:hover {
+  box-shadow: 0 12px 32px -8px oklch(0.6 0.1 265 / 0.14), 0 4px 8px -4px oklch(0.6 0.1 265 / 0.08);
+  border-color: oklch(0.88 0.02 265 / 0.6);
+}
+
