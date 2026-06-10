@@ -197,7 +197,16 @@ export function DashboardContent() {
       <div className="grid grid-cols-1 xl:grid-cols-[1fr_320px] gap-6">
         <div className="space-y-6 min-w-0">
           {/* Agent Network */}
-          <section className="card-soft p-6">
+          <motion.section
+            className="card-soft p-6"
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: "-60px" }}
+            variants={{
+              hidden: { opacity: 0, y: 30 },
+              visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: [0.25, 0.46, 0.45, 0.94] } },
+            }}
+          >
             <div className="flex items-center justify-between mb-5">
               <h2 className="flex items-center gap-2 font-bold text-lg">
                 <span className="w-8 h-8 rounded-xl gradient-primary flex items-center justify-center">
@@ -209,27 +218,35 @@ export function DashboardContent() {
                 Lihat Semua Agent <ChevronRight className="w-3 h-3 transition-transform duration-300 ease-[cubic-bezier(0.25,0.46,0.45,0.94)] group-hover:translate-x-0.5" />
               </button>
             </div>
-            <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-6 gap-3">
+            <motion.div
+              className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-6 gap-3"
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, margin: "-60px" }}
+              variants={{
+                hidden: {},
+                visible: { transition: { staggerChildren: 0.07 } },
+              }}
+            >
               {agents.map((a) => (
                 <motion.div
                   key={a.name}
-                  whileHover={{ y: -6, transition: { duration: 0.35, ease: [0.25, 0.46, 0.45, 0.94] } }}
+                  variants={{
+                    hidden: { opacity: 0, y: 28, scale: 0.96 },
+                    visible: { opacity: 1, y: 0, scale: 1, transition: { duration: 0.5, ease: [0.25, 0.46, 0.45, 0.94] } },
+                  }}
+                  whileHover={{
+                    y: -6,
+                    boxShadow: "0 12px 32px -8px oklch(0.6 0.1 265 / 0.14), 0 4px 8px -4px oklch(0.6 0.1 265 / 0.08)",
+                    borderColor: "oklch(0.88 0.02 265 / 0.6)",
+                    transition: { duration: 0.35, ease: [0.25, 0.46, 0.45, 0.94] },
+                  }}
                   className={`rounded-2xl border p-3 cursor-pointer ${
                     a.highlight
                       ? "border-[oklch(0.85_0.12_55)]/50 bg-gradient-to-b from-[oklch(0.97_0.04_60)] to-[oklch(0.95_0.06_30)]"
                       : "border-border bg-gradient-to-b from-card to-[oklch(0.98_0.015_260)]"
                   }`}
-                  style={{
-                    transition: "box-shadow 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94), border-color 0.3s ease",
-                  }}
-                  onHoverStart={(e) => {
-                    (e.currentTarget as HTMLElement).style.boxShadow = "0 12px 32px -8px oklch(0.6 0.1 265 / 0.14), 0 4px 8px -4px oklch(0.6 0.1 265 / 0.08)";
-                    (e.currentTarget as HTMLElement).style.borderColor = "oklch(0.88 0.02 265 / 0.6)";
-                  }}
-                  onHoverEnd={(e) => {
-                    (e.currentTarget as HTMLElement).style.boxShadow = "";
-                    (e.currentTarget as HTMLElement).style.borderColor = "";
-                  }}
+                  style={{ transition: "box-shadow 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94), border-color 0.3s ease" }}
                 >
                   <div className="flex flex-col items-center text-center gap-1.5 mb-3">
                     <div className="w-12 h-12 rounded-2xl flex items-center justify-center text-white font-bold shrink-0 shadow-md"
@@ -250,9 +267,9 @@ export function DashboardContent() {
                   </button>
                 </motion.div>
               ))}
-            </div>
+            </motion.div>
 
-          </section>
+          </motion.section>
 
           {/* Recent Activity / Task Progress / Perf */}
           <section className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -339,48 +356,85 @@ export function DashboardContent() {
             </ul>
           </section>
 
-          <section className="card-soft p-5">
+          <motion.section
+            className="card-soft p-5"
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: "-40px" }}
+            variants={{
+              hidden: { opacity: 0, y: 24 },
+              visible: { opacity: 1, y: 0, transition: { duration: 0.55, ease: [0.25, 0.46, 0.45, 0.94] } },
+            }}
+          >
             <h2 className="font-bold mb-4">System Status</h2>
             <div className="rounded-2xl p-4 mb-4 bg-gradient-to-br from-[oklch(0.95_0.04_240)] to-[oklch(0.96_0.05_280)] flex items-center justify-center h-24">
               <div className="w-16 h-16 rounded-2xl gradient-primary flex items-center justify-center shadow-[var(--shadow-glow)] rotate-3 hover:rotate-0 transition-all duration-500 ease-[cubic-bezier(0.25,0.46,0.45,0.94)]">
                 <Server className="w-7 h-7 text-white" />
               </div>
             </div>
-            <ul className="space-y-3">
+            <motion.ul className="space-y-3" variants={{ hidden: {}, visible: { transition: { staggerChildren: 0.08 } } }}>
               {systemStatus.map((s) => (
-                <li key={s.label} className="flex items-center gap-3 text-sm">
+                <motion.li
+                  key={s.label}
+                  variants={{
+                    hidden: { opacity: 0, x: -12 },
+                    visible: { opacity: 1, x: 0, transition: { duration: 0.4, ease: [0.25, 0.46, 0.45, 0.94] } },
+                  }}
+                  className="flex items-center gap-3 text-sm"
+                >
                   <s.icon className="w-4 h-4 text-muted-foreground" />
                   <span className="flex-1">{s.label}</span>
                   <span className="text-xs font-semibold text-[var(--success)] flex items-center gap-1">
                     <span className="w-1.5 h-1.5 rounded-full bg-[var(--success)] animate-pulse" />
                     {s.val}
                   </span>
-                </li>
+                </motion.li>
               ))}
-            </ul>
-          </section>
+            </motion.ul>
+          </motion.section>
 
-          <section className="card-soft p-5">
+          <motion.section
+            className="card-soft p-5"
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: "-40px" }}
+            variants={{
+              hidden: { opacity: 0, y: 24 },
+              visible: { opacity: 1, y: 0, transition: { duration: 0.55, ease: [0.25, 0.46, 0.45, 0.94] } },
+            }}
+          >
             <h2 className="font-bold mb-3">Task Queue</h2>
-            <div className="space-y-3 text-sm">
+            <motion.div className="space-y-3 text-sm" variants={{ hidden: {}, visible: { transition: { staggerChildren: 0.1 } } }}>
               {[
                 { name: "Sync CRM Data", agent: "Tubang", pct: 78 },
                 { name: "Generate Q3 Report", agent: "DumbDumb", pct: 45 },
                 { name: "Crypto Market Scan", agent: "Trading Bot", pct: 92 },
               ].map((t) => (
-                <div key={t.name}>
+                <motion.div
+                  key={t.name}
+                  variants={{
+                    hidden: { opacity: 0, y: 16 },
+                    visible: { opacity: 1, y: 0, transition: { duration: 0.45, ease: [0.25, 0.46, 0.45, 0.94] } },
+                  }}
+                >
                   <div className="flex justify-between mb-1.5">
                     <span className="font-medium text-[13px] truncate">{t.name}</span>
                     <span className="text-[11px] text-muted-foreground">{t.pct}%</span>
                   </div>
                   <div className="h-1.5 rounded-full bg-secondary overflow-hidden">
-                    <div className="h-full gradient-primary rounded-full" style={{ width: `${t.pct}%` }} />
+                    <motion.div
+                      className="h-full gradient-primary rounded-full"
+                      initial={{ width: 0 }}
+                      whileInView={{ width: `${t.pct}%` }}
+                      viewport={{ once: true }}
+                      transition={{ duration: 0.8, ease: [0.25, 0.46, 0.45, 0.94], delay: 0.2 }}
+                    />
                   </div>
                   <p className="text-[10px] text-muted-foreground mt-1">by {t.agent}</p>
-                </div>
+                </motion.div>
               ))}
-            </div>
-          </section>
+            </motion.div>
+          </motion.section>
         </aside>
       </div>
     </main>
