@@ -421,6 +421,15 @@ export function DashboardContent() {
                   <Network className="w-4 h-4 text-white" />
                 </span>
                 AI Agent Network
+                <span className="ml-2 text-[10px] font-medium inline-flex items-center gap-1 text-muted-foreground">
+                  {pm2Procs ? (
+                    <><span className="w-1.5 h-1.5 rounded-full bg-[var(--success)] animate-pulse" /> PM2 live · {pm2Procs.length}</>
+                  ) : pm2Error ? (
+                    <><span className="w-1.5 h-1.5 rounded-full bg-[oklch(0.7_0.2_25)]" /> PM2 offline</>
+                  ) : (
+                    <><Loader2 className="w-3 h-3 animate-spin" /> PM2…</>
+                  )}
+                </span>
               </h2>
               <button className="text-xs font-medium px-3 py-2 rounded-xl border border-border hover:bg-secondary transition-all duration-300 ease-[cubic-bezier(0.25,0.46,0.45,0.94)] inline-flex items-center gap-1 group">
                 Lihat Semua Agent <ChevronRight className="w-3 h-3 transition-transform duration-300 ease-[cubic-bezier(0.25,0.46,0.45,0.94)] group-hover:translate-x-0.5" />
