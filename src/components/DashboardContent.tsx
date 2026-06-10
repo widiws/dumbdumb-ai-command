@@ -1,4 +1,5 @@
 import heroRobot from "@/assets/hero-robot.png";
+import referenceHeroTop from "@/assets/reference-hero-top.png";
 import {
   Bot, ClipboardList, FileText, Zap, Plus, Send, Terminal, FileBarChart, BarChart3,
   Network, ChevronRight, Server, Database, Cpu, Wifi, Rocket, CheckCircle2,
@@ -131,8 +132,16 @@ function PerfChart() {
 export function DashboardContent() {
   return (
     <main className="px-6 lg:px-8 py-6 space-y-6">
+      <section className="hidden lg:block">
+        <img
+          src={referenceHeroTop}
+          alt="DumbDumb Corp AI dashboard hero"
+          className="w-full rounded-[30px] border border-white/70 shadow-[0_18px_48px_-24px_oklch(0.66_0.12_260/0.28)]"
+        />
+      </section>
+
       {/* Hero + KPIs unified top zone */}
-      <section className="relative">
+      <section className="relative lg:hidden">
         {/* Live Mode (top-right) */}
         <button className="absolute top-0 right-0 z-30 flex items-center gap-2 px-4 py-2 rounded-full bg-card border border-[oklch(0.85_0.12_165)]/50 text-[oklch(0.42_0.14_165)] font-semibold text-xs shadow-[var(--shadow-card)] hover:scale-105 transition">
           <span className="w-1.5 h-1.5 rounded-full bg-[var(--success)] animate-pulse" /> Live Mode <ChevronRight className="w-3 h-3" />
