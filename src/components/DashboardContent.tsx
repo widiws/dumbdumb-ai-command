@@ -1,9 +1,115 @@
 import {
   Bot, ClipboardList, FileText, Zap, Plus, Send, Terminal, FileBarChart, BarChart3,
-  Network, ChevronRight, Server, Database, Cpu, Wifi, Rocket, CheckCircle2,
+  Network, ChevronRight, Server, Database, Cpu, Wifi, Rocket, CheckCircle2, Users, Upload, Loader2,
 } from "lucide-react";
 import { LazyMotion, domAnimation, m, useReducedMotion, type Variants } from "framer-motion";
+import { useEffect, useState } from "react";
 import heroRobot from "@/assets/hero-robot.png";
+
+const SETORAN_API = "http://160.19.166.204:5101";
+
+type SetoranState = {
+  teams?: Record<string, any> | any[];
+  members?: Record<string, any> | any[];
+  attendance?: Record<string, any>;
+  uploads?: Record<string, any> | any[];
+  today?: string;
+};
+
+function useSetoranState() {
+  const [data, setData] = useState<SetoranState | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    let alive = true;
+    const fetchOnce = async () => {
+      try {
+        const ctl = new AbortController();
+        const t = setTimeout(() => ctl.abort(), 8000);
+        const res = await fetch(`${SETORAN_API}/api/state`, { signal: ctl.signal });
+        clearTimeout(t);
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const json = await res.json();
+        if (!alive) return;
+        setData(json);
+        setError(null);
+      } catch (e: any) {
+        if (!alive) return;
+        setError(e?.message ?? "fetch failed");
+      } finally {
+        if (alive) setLoading(false);
+      }
+    };
+    fetchOnce();
+    const id = setInterval(fetchOnce, 60_000);
+    return () => { alive = false; clearInterval(id); };
+  }, []);
+
+  return { data, loading, error };
+}
+
+// Normalisasi struktur attendance hari ini -> array { name, time }
+function getTodayAttendance(state: SetoranState | null): Array<{ name: string; time: string; status?: string }> {
+  if (!state) return [];
+  const today = state.today ?? new Date().toISOString().slice(0, 10);
+  const att = (state.attendance ?? {}) as Record<string, any>;
+  const todayAtt = att[today] ?? att[Object.keys(att).pop() ?? ""] ?? {};
+  if (!todayAtt || typeof todayAtt !== "object") return [];
+  return Object.entries(todayAtt).map(([key, v]: [string, any]) => {
+    if (typeof v === "string") return { name: key, time: v };
+    return { name: v?.name ?? key, time: v?.time ?? v?.checkin ?? "-", status: v?.status };
+  });
+}
+
+function getTodayUploadsCount(state: SetoranState | null): number {
+  if (!state) return 0;
+  const today = state.today ?? new Date().toISOString().slice(0, 10);
+  const up = state.uploads as any;
+  if (!up) return 0;
+  if (Array.isArray(up)) {
+    return up.filter((u) => (u?.date ?? u?.time ?? "").toString().startsWith(today)).length;
+  }
+  const todayUp = up[today];
+  if (Array.isArray(todayUp)) return todayUp.length;
+  if (todayUp && typeof todayUp === "object") return Object.keys(todayUp).length;
+  // sum all teams for today
+  let sum = 0;
+  for (const v of Object.values(up)) {
+    if (Array.isArray(v)) sum += v.length;
+    else if (v && typeof v === "object") sum += Object.keys(v).length;
+  }
+  return sum;
+}
+
+function getTeams(state: SetoranState | null): Array<{ name: string; members: number; uploads: number }> {
+  if (!state?.teams) return [];
+  const today = state.today ?? new Date().toISOString().slice(0, 10);
+  const teamsRaw: any = state.teams;
+  const uploads: any = state.uploads ?? {};
+  const entries = Array.isArray(teamsRaw)
+    ? teamsRaw.map((t, i) => [t?.id ?? t?.name ?? String(i), t] as [string, any])
+    : Object.entries(teamsRaw);
+
+  return entries.map(([key, t]) => {
+    const name = (typeof t === "object" && t?.name) ? t.name : key;
+    let membersCount = 0;
+    if (Array.isArray(t)) membersCount = t.length;
+    else if (Array.isArray(t?.members)) membersCount = t.members.length;
+    else if (t?.members && typeof t.members === "object") membersCount = Object.keys(t.members).length;
+
+    let teamUploads = 0;
+    const u = uploads[key] ?? uploads[name];
+    if (Array.isArray(u)) {
+      teamUploads = u.filter((x) => !x?.date || x.date.toString().startsWith(today)).length;
+    } else if (u && typeof u === "object") {
+      const todayList = u[today];
+      teamUploads = Array.isArray(todayList) ? todayList.length : (todayList ? Object.keys(todayList).length : 0);
+    }
+    return { name, members: membersCount, uploads: teamUploads };
+  });
+}
+
 
 const EASE = [0.25, 0.46, 0.45, 0.94] as const;
 // Hanya aktifkan will-change saat elemen benar-benar dianimasikan masuk.
@@ -136,6 +242,22 @@ function PerfChart() {
 
 export function DashboardContent() {
   const reduce = useReducedMotion();
+  const { data: setoran, loading: setoranLoading, error: setoranError } = useSetoranState();
+
+  const todayAttendance = getTodayAttendance(setoran);
+  const presentCount = todayAttendance.length;
+  const uploadCount = getTodayUploadsCount(setoran);
+  const teams = getTeams(setoran);
+
+  const liveKpis = kpis.map((k) => {
+    if (k.label === "Active Agents") {
+      return { ...k, label: "Karyawan Hadir", value: setoranLoading && !setoran ? "…" : String(presentCount), delta: setoranError ? "offline · data dummy" : `${presentCount} hadir hari ini` };
+    }
+    if (k.label === "Running Tasks") {
+      return { ...k, label: "Upload Hari Ini", value: setoranLoading && !setoran ? "…" : String(uploadCount), delta: setoranError ? "offline · data dummy" : `${uploadCount} file diunggah` };
+    }
+    return k;
+  });
 
   const fadeUp = (y = 24, duration = 0.55): Variants => ({
     hidden: { opacity: 0, y: reduce ? 0 : y },
@@ -204,7 +326,7 @@ export function DashboardContent() {
           </div>
 
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-            {kpis.map((k) => (
+            {liveKpis.map((k) => (
               <div key={k.label} className="card-soft card-soft-hover p-4">
                 <div className="flex items-start gap-3">
                   <div className="w-11 h-11 rounded-2xl flex items-center justify-center shadow-md shrink-0"
@@ -290,32 +412,106 @@ export function DashboardContent() {
 
           </m.section>
 
+          {/* Tim Produksi (live dari Setoran API) */}
+          <section className="card-soft p-6">
+            <div className="flex items-center justify-between mb-5">
+              <h2 className="flex items-center gap-2 font-bold text-lg">
+                <span className="w-8 h-8 rounded-xl gradient-primary flex items-center justify-center">
+                  <Users className="w-4 h-4 text-white" />
+                </span>
+                Tim Produksi
+              </h2>
+              <span className="text-[11px] text-muted-foreground inline-flex items-center gap-1.5">
+                {setoranLoading && !setoran ? (
+                  <><Loader2 className="w-3 h-3 animate-spin" /> Memuat…</>
+                ) : setoranError ? (
+                  <><span className="w-1.5 h-1.5 rounded-full bg-[oklch(0.7_0.2_25)]" /> Offline · data dummy</>
+                ) : (
+                  <><span className="w-1.5 h-1.5 rounded-full bg-[var(--success)] animate-pulse" /> Live · {setoran?.today ?? "hari ini"}</>
+                )}
+              </span>
+            </div>
+            {(() => {
+              const display = teams.length > 0 ? teams : [
+                { name: "Tim Alpha", members: 5, uploads: 12 },
+                { name: "Tim Beta", members: 4, uploads: 8 },
+                { name: "Tim Gamma", members: 6, uploads: 15 },
+              ];
+              return (
+                <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-3">
+                  {display.map((t) => (
+                    <div key={t.name} className="rounded-2xl border border-border p-4 bg-gradient-to-b from-card to-[oklch(0.98_0.015_260)]">
+                      <div className="flex items-center gap-3">
+                        <div className="w-10 h-10 rounded-xl gradient-primary flex items-center justify-center text-white font-bold shrink-0">
+                          {t.name.charAt(0).toUpperCase()}
+                        </div>
+                        <div className="min-w-0">
+                          <p className="font-semibold text-sm truncate">{t.name}</p>
+                          <p className="text-[11px] text-muted-foreground">Tim Produksi</p>
+                        </div>
+                      </div>
+                      <div className="grid grid-cols-2 gap-2 mt-3">
+                        <div className="rounded-xl bg-card/70 p-2 flex items-center gap-2">
+                          <Users className="w-3.5 h-3.5 text-muted-foreground" />
+                          <div className="min-w-0">
+                            <p className="text-[10px] text-muted-foreground leading-none">Anggota</p>
+                            <p className="text-sm font-bold leading-tight">{t.members}</p>
+                          </div>
+                        </div>
+                        <div className="rounded-xl bg-card/70 p-2 flex items-center gap-2">
+                          <Upload className="w-3.5 h-3.5 text-muted-foreground" />
+                          <div className="min-w-0">
+                            <p className="text-[10px] text-muted-foreground leading-none">Upload</p>
+                            <p className="text-sm font-bold leading-tight">{t.uploads}</p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              );
+            })()}
+          </section>
+
+
+
           {/* Recent Activity / Task Progress / Perf */}
           <section className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             <div className="card-soft p-6 lg:col-span-1">
               <div className="flex items-center justify-between mb-4">
-                <h2 className="font-bold flex items-center gap-2"><Sparkle /> Aktivitas Hari Ini</h2>
-                <select className="text-xs bg-secondary rounded-lg px-2 py-1 border-none focus:outline-none">
-                  <option>Hari Ini</option>
-                </select>
+                <h2 className="font-bold flex items-center gap-2"><Sparkle /> Absensi Hari Ini</h2>
+                <span className="text-[10px] text-muted-foreground inline-flex items-center gap-1">
+                  {setoranLoading && !setoran ? <Loader2 className="w-3 h-3 animate-spin" /> :
+                    setoranError ? <span className="text-[oklch(0.6_0.18_25)]">offline</span> :
+                    <><span className="w-1.5 h-1.5 rounded-full bg-[var(--success)] animate-pulse" /> live</>}
+                </span>
               </div>
-              <ul className="space-y-3.5">
-                {activities.map((a, i) => (
-                  <li key={i} className="flex gap-3 text-sm">
-                    <span className="text-[11px] font-mono text-muted-foreground w-10 pt-0.5">{a.time}</span>
-                    <span className="w-7 h-7 rounded-lg flex items-center justify-center shrink-0"
-                      style={{ background: `color-mix(in oklab, ${a.color} 20%, white)` }}>
-                      <Bot className="w-3.5 h-3.5" style={{ color: a.color }} />
-                    </span>
-                    <div className="flex-1 min-w-0">
-                      <p className="text-[13px]"><b>{a.who}</b> <span className="text-muted-foreground">{a.action}</span></p>
-                      <p className="text-[11px] text-muted-foreground truncate">{a.sub}</p>
-                    </div>
-                    <CheckCircle2 className="w-4 h-4 text-[var(--success)] shrink-0" />
-                  </li>
-                ))}
-              </ul>
+              {setoranLoading && !setoran ? (
+                <div className="flex items-center justify-center py-10 text-muted-foreground text-sm">
+                  <Loader2 className="w-4 h-4 animate-spin mr-2" /> Memuat absensi…
+                </div>
+              ) : (
+                <ul className="space-y-3.5">
+                  {(todayAttendance.length > 0 ? todayAttendance : activities.map(a => ({ name: a.who, time: a.time, status: a.action }))).slice(0, 6).map((a, i) => (
+                    <li key={i} className="flex gap-3 text-sm">
+                      <span className="text-[11px] font-mono text-muted-foreground w-12 pt-0.5">{a.time}</span>
+                      <span className="w-7 h-7 rounded-lg flex items-center justify-center shrink-0 bg-[oklch(0.95_0.04_165)]">
+                        <Users className="w-3.5 h-3.5 text-[var(--success)]" />
+                      </span>
+                      <div className="flex-1 min-w-0">
+                        <p className="text-[13px] truncate"><b>{a.name}</b></p>
+                        <p className="text-[11px] text-muted-foreground truncate">{a.status ?? "Masuk kerja"}</p>
+                      </div>
+                      <CheckCircle2 className="w-4 h-4 text-[var(--success)] shrink-0" />
+                    </li>
+                  ))}
+                  {todayAttendance.length === 0 && !setoranError && (
+                    <li className="text-xs text-muted-foreground text-center py-2">Belum ada absensi hari ini</li>
+                  )}
+                </ul>
+              )}
             </div>
+
 
             <div className="card-soft p-6">
               <div className="flex items-center justify-between mb-4">
