@@ -123,11 +123,13 @@
   box-shadow: var(--shadow-card);
   border: 1px solid oklch(0.94 0.015 260);
   transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94), box-shadow 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94), border-color 0.3s ease;
+  will-change: transform;
+  transform: translateZ(0);
 }
 @utility card-soft-hover {
   &:hover {
     box-shadow: 0 12px 32px -8px oklch(0.6 0.1 265 / 0.14), 0 4px 8px -4px oklch(0.6 0.1 265 / 0.08);
-    transform: translateY(-4px);
+    transform: translate3d(0, -4px, 0);
     border-color: oklch(0.88 0.02 265 / 0.6);
   }
 }
@@ -142,4 +144,23 @@
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
+}
+
+@keyframes float {
+  0%, 100% { transform: translate3d(0, 0, 0); }
+  50% { transform: translate3d(0, -10px, 0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+  .card-soft-hover:hover {
+    transform: none !important;
+  }
 }
