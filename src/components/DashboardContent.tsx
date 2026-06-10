@@ -185,7 +185,7 @@ export function DashboardContent() {
                 </p>
               </div>
             </div>
-            <Sparkline stroke={k.stroke} />
+            <Sparkline stroke={k.stroke} id={String(k.label).replace(/\s+/g, "")} />
           </div>
         ))}
       </section>
