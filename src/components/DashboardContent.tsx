@@ -384,27 +384,48 @@ export function DashboardContent() {
             </motion.ul>
           </motion.section>
 
-          <section className="card-soft p-5">
+          <motion.section
+            className="card-soft p-5"
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: "-40px" }}
+            variants={{
+              hidden: { opacity: 0, y: 24 },
+              visible: { opacity: 1, y: 0, transition: { duration: 0.55, ease: [0.25, 0.46, 0.45, 0.94] } },
+            }}
+          >
             <h2 className="font-bold mb-3">Task Queue</h2>
-            <div className="space-y-3 text-sm">
+            <motion.div className="space-y-3 text-sm" variants={{ hidden: {}, visible: { transition: { staggerChildren: 0.1 } } }}>
               {[
                 { name: "Sync CRM Data", agent: "Tubang", pct: 78 },
                 { name: "Generate Q3 Report", agent: "DumbDumb", pct: 45 },
                 { name: "Crypto Market Scan", agent: "Trading Bot", pct: 92 },
               ].map((t) => (
-                <div key={t.name}>
+                <motion.div
+                  key={t.name}
+                  variants={{
+                    hidden: { opacity: 0, y: 16 },
+                    visible: { opacity: 1, y: 0, transition: { duration: 0.45, ease: [0.25, 0.46, 0.45, 0.94] } },
+                  }}
+                >
                   <div className="flex justify-between mb-1.5">
                     <span className="font-medium text-[13px] truncate">{t.name}</span>
                     <span className="text-[11px] text-muted-foreground">{t.pct}%</span>
                   </div>
                   <div className="h-1.5 rounded-full bg-secondary overflow-hidden">
-                    <div className="h-full gradient-primary rounded-full" style={{ width: `${t.pct}%` }} />
+                    <motion.div
+                      className="h-full gradient-primary rounded-full"
+                      initial={{ width: 0 }}
+                      whileInView={{ width: `${t.pct}%` }}
+                      viewport={{ once: true }}
+                      transition={{ duration: 0.8, ease: [0.25, 0.46, 0.45, 0.94], delay: 0.2 }}
+                    />
                   </div>
                   <p className="text-[10px] text-muted-foreground mt-1">by {t.agent}</p>
-                </div>
+                </motion.div>
               ))}
-            </div>
-          </section>
+            </motion.div>
+          </motion.section>
         </aside>
       </div>
     </main>
