@@ -326,7 +326,7 @@ export function DashboardContent() {
           </div>
 
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-            {kpis.map((k) => (
+            {liveKpis.map((k) => (
               <div key={k.label} className="card-soft card-soft-hover p-4">
                 <div className="flex items-start gap-3">
                   <div className="w-11 h-11 rounded-2xl flex items-center justify-center shadow-md shrink-0"
