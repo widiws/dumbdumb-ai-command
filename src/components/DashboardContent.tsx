@@ -133,6 +133,25 @@ function PerfChart() {
 }
 
 export function DashboardContent() {
+  const reduce = useReducedMotion();
+
+  const fadeUp = (y = 24, duration = 0.55): Variants => ({
+    hidden: { opacity: 0, y: reduce ? 0 : y },
+    visible: { opacity: 1, y: 0, transition: { duration: reduce ? 0.2 : duration, ease: EASE } },
+  });
+  const fadeUpScale = (): Variants => ({
+    hidden: { opacity: 0, y: reduce ? 0 : 28, scale: reduce ? 1 : 0.96 },
+    visible: { opacity: 1, y: 0, scale: 1, transition: { duration: reduce ? 0.2 : 0.5, ease: EASE } },
+  });
+  const fadeLeft = (): Variants => ({
+    hidden: { opacity: 0, x: reduce ? 0 : -12 },
+    visible: { opacity: 1, x: 0, transition: { duration: reduce ? 0.2 : 0.4, ease: EASE } },
+  });
+  const stagger = (children = 0.08): Variants => ({
+    hidden: {},
+    visible: { transition: { staggerChildren: reduce ? 0 : children, delayChildren: reduce ? 0 : 0.05 } },
+  });
+
   return (
     <main className="px-6 lg:px-8 py-6 space-y-6">
       {/* Hero + KPIs unified top zone */}
