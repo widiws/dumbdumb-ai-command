@@ -3,6 +3,7 @@ import {
   Bot, ClipboardList, FileText, Zap, Plus, Send, Terminal, FileBarChart, BarChart3,
   Network, ChevronRight, Server, Database, Cpu, Wifi, Rocket, CheckCircle2,
 } from "lucide-react";
+import { motion } from "framer-motion";
 
 const kpis = [
   { label: "Active Agents", value: "12", delta: "+2 hari ini", gradient: "var(--gradient-blue)", icon: Bot, stroke: "oklch(0.7 0.16 240)" },
