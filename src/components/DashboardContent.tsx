@@ -269,7 +269,7 @@ export function DashboardContent() {
               ))}
             </motion.div>
 
-          </section>
+          </motion.section>
 
           {/* Recent Activity / Task Progress / Perf */}
           <section className="grid grid-cols-1 lg:grid-cols-3 gap-6">
