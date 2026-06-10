@@ -242,6 +242,22 @@ function PerfChart() {
 
 export function DashboardContent() {
   const reduce = useReducedMotion();
+  const { data: setoran, loading: setoranLoading, error: setoranError } = useSetoranState();
+
+  const todayAttendance = getTodayAttendance(setoran);
+  const presentCount = todayAttendance.length;
+  const uploadCount = getTodayUploadsCount(setoran);
+  const teams = getTeams(setoran);
+
+  const liveKpis = kpis.map((k) => {
+    if (k.label === "Active Agents") {
+      return { ...k, label: "Karyawan Hadir", value: setoranLoading && !setoran ? "…" : String(presentCount), delta: setoranError ? "offline · data dummy" : `${presentCount} hadir hari ini` };
+    }
+    if (k.label === "Running Tasks") {
+      return { ...k, label: "Upload Hari Ini", value: setoranLoading && !setoran ? "…" : String(uploadCount), delta: setoranError ? "offline · data dummy" : `${uploadCount} file diunggah` };
+    }
+    return k;
+  });
 
   const fadeUp = (y = 24, duration = 0.55): Variants => ({
     hidden: { opacity: 0, y: reduce ? 0 : y },
