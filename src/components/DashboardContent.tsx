@@ -245,8 +245,8 @@ export function DashboardContent() {
                     <p className="text-[11px] font-semibold text-foreground/90 leading-tight">{a.d1}</p>
                     <p className="text-[10px] text-muted-foreground leading-tight mt-0.5">{a.d2}</p>
                   </div>
-                  <button className="mt-2 w-full h-7 rounded-lg bg-card border border-border flex items-center justify-center hover:gradient-primary hover:text-white hover:border-transparent transition group">
-                    <ChevronRight className="w-3.5 h-3.5" />
+                  <button className="mt-2 w-full h-7 rounded-lg bg-card border border-border flex items-center justify-center hover:gradient-primary hover:text-white hover:border-transparent transition-all duration-300 ease-[cubic-bezier(0.25,0.46,0.45,0.94)] group">
+                    <ChevronRight className="w-3.5 h-3.5 transition-transform duration-300 ease-[cubic-bezier(0.25,0.46,0.45,0.94)] group-hover:translate-x-0.5" />
                   </button>
                 </motion.div>
               ))}
