@@ -12,13 +12,14 @@ const kpis = [
 ];
 
 const agents = [
-  { name: "DumbDumb", role: "Secretary AI", status: "Online", color: "var(--gradient-blue)", initial: "D", d1: "Memory Active", d2: "Voice Standby", dot: "var(--success)" },
-  { name: "Momot", role: "Task Dispatcher", status: "Running", color: "var(--gradient-purple)", initial: "M", d1: "Queue 7 Tasks", d2: "Auto Chain On", dot: "var(--purple-soft)" },
-  { name: "Gentho", role: "PC Executor", status: "Connected", color: "var(--gradient-green)", initial: "G", d1: "Screen Control", d2: "Chrome Attach", dot: "var(--success)" },
-  { name: "Bot CEO", role: "Strategic Planner", status: "Planning", color: "var(--gradient-orange)", initial: "B", d1: "Mode", d2: "Approval Req.", dot: "var(--orange-soft)" },
-  { name: "Tubang", role: "Data Collector", status: "Active", color: "var(--gradient-pink)", initial: "T", d1: "Web Monitor", d2: "Real-time", dot: "var(--success)" },
-  { name: "Trading Bot", role: "Market Analyst", status: "Active", color: "var(--gradient-primary)", initial: "₿", d1: "Market Scan", d2: "24/7 Running", dot: "var(--success)" },
+  { name: "DumbDumb", role: "Secretary AI", status: "Online", color: "var(--gradient-blue)", initial: "D", d1: "Memory Active", d2: "Voice Standby", dot: "var(--success)", highlight: false },
+  { name: "Momot", role: "Task Dispatcher", status: "Running", color: "var(--gradient-purple)", initial: "M", d1: "Queue 7 Tasks", d2: "Auto Chain On", dot: "var(--purple-soft)", highlight: false },
+  { name: "Gentho", role: "PC Executor", status: "Connected", color: "var(--gradient-green)", initial: "G", d1: "Screen Control", d2: "Chrome Attach", dot: "var(--success)", highlight: false },
+  { name: "Bot CEO", role: "Strategic Planner", status: "Planning", color: "var(--gradient-orange)", initial: "B", d1: "Mode", d2: "Approval Req.", dot: "var(--orange-soft)", highlight: true },
+  { name: "Tubang", role: "Data Collector", status: "Active", color: "var(--gradient-pink)", initial: "T", d1: "Web Monitor", d2: "Real-time", dot: "var(--success)", highlight: false },
+  { name: "Trading Bot", role: "Market Analyst", status: "Active", color: "var(--gradient-primary)", initial: "₿", d1: "Market Scan", d2: "24/7 Running", dot: "var(--success)", highlight: false },
 ];
+
 
 const quickCommands = [
   { title: "Buat Task Baru", desc: "Tambah pekerjaan untuk AI", icon: Send, grad: "var(--gradient-blue)" },
@@ -129,29 +130,33 @@ export function DashboardContent() {
   return (
     <main className="px-6 lg:px-8 py-6 space-y-6">
       {/* Hero */}
-      <section className="relative overflow-hidden rounded-3xl gradient-hero border border-border p-6 lg:p-10">
+      <section className="relative overflow-hidden rounded-3xl gradient-hero border border-border p-6 lg:p-8">
+        <button className="absolute top-6 right-6 z-20 flex items-center gap-2 px-4 py-2 rounded-full bg-card border border-[oklch(0.85_0.12_165)]/50 text-[oklch(0.42_0.14_165)] font-semibold text-xs shadow-[var(--shadow-card)] hover:scale-105 transition">
+          <span className="w-1.5 h-1.5 rounded-full bg-[var(--success)] animate-pulse" /> Live Mode <ChevronRight className="w-3 h-3" />
+        </button>
         <div className="grid lg:grid-cols-[1.4fr_1fr] gap-6 items-center relative z-10">
-          <div>
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-card/80 backdrop-blur border border-border text-xs font-medium mb-5">
-              <Sparkle /> AI Corporation Command Center
+          <div className="flex items-start gap-5">
+            <div className="w-16 h-16 rounded-2xl bg-card flex items-center justify-center shadow-[var(--shadow-card)] shrink-0">
+              <svg viewBox="0 0 24 24" className="w-7 h-7" fill="url(#sg)">
+                <defs>
+                  <linearGradient id="sg" x1="0" y1="0" x2="1" y2="1">
+                    <stop offset="0%" stopColor="oklch(0.7 0.18 265)" />
+                    <stop offset="100%" stopColor="oklch(0.72 0.18 295)" />
+                  </linearGradient>
+                </defs>
+                <path d="M12 2l2.4 6.6L21 11l-6.6 2.4L12 20l-2.4-6.6L3 11l6.6-2.4z" />
+              </svg>
             </div>
-            <h1 className="text-4xl lg:text-5xl font-bold leading-tight">
-              Welcome back, <span className="text-gradient">Widi</span> <span>👋</span>
-            </h1>
-            <p className="text-xl lg:text-2xl mt-2 font-semibold text-foreground/80">Build. Monitor. Automate.</p>
-            <p className="mt-4 text-muted-foreground max-w-2xl text-[15px] leading-relaxed">
-              Kelola semua agent AI, task otomatis, bot trading, laporan bisnis, dan workflow kerja dalam satu dashboard terintegrasi.
-            </p>
-            <div className="flex flex-wrap gap-3 mt-7">
-              <button className="px-6 py-3 rounded-2xl gradient-primary text-white font-semibold text-sm shadow-[var(--shadow-glow)] hover:scale-[1.03] transition-transform inline-flex items-center gap-2">
-                <Rocket className="w-4 h-4" /> Mulai Command
-              </button>
-              <button className="px-6 py-3 rounded-2xl bg-card border border-border font-semibold text-sm hover:bg-secondary transition inline-flex items-center gap-2">
-                <Bot className="w-4 h-4" /> Lihat Agents
-              </button>
+            <div>
+              <h1 className="text-3xl lg:text-4xl font-bold leading-tight">
+                Selamat datang, <span className="text-gradient">Widi</span> <span>👋</span>
+              </h1>
+              <p className="mt-3 text-muted-foreground text-[15px] leading-relaxed max-w-xl">
+                Ini adalah pusat kendali semua AI Agent dan operasional corp kamu.
+              </p>
             </div>
           </div>
-          <div className="relative h-64 lg:h-80">
+          <div className="relative h-56 lg:h-64">
             <div className="absolute inset-0 bg-gradient-to-br from-[oklch(0.85_0.1_280)]/30 to-transparent blur-3xl" />
             <img src={heroRobot} alt="AI Robot Assistant" className="relative z-10 w-full h-full object-contain drop-shadow-2xl"
               style={{ animation: "float 6s ease-in-out infinite" }} />
@@ -159,6 +164,7 @@ export function DashboardContent() {
         </div>
         <style>{`@keyframes float { 0%,100% { transform: translateY(0) } 50% { transform: translateY(-12px) } }`}</style>
       </section>
+
 
       {/* KPIs */}
       <section className="grid grid-cols-2 lg:grid-cols-4 gap-4">
@@ -197,31 +203,35 @@ export function DashboardContent() {
                 Lihat Semua Agent <ChevronRight className="w-3 h-3" />
               </button>
             </div>
-            <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-3 gap-4">
+            <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-6 gap-3">
               {agents.map((a) => (
-                <div key={a.name} className="rounded-2xl border border-border bg-gradient-to-b from-card to-[oklch(0.98_0.015_260)] p-4 hover:shadow-[var(--shadow-soft)] hover:-translate-y-1 transition-all">
-                  <div className="flex items-start gap-3 mb-3">
-                    <div className="w-11 h-11 rounded-2xl flex items-center justify-center text-white font-bold shrink-0"
+                <div key={a.name}
+                  className={`rounded-2xl border p-3 transition-all hover:-translate-y-1 hover:shadow-[var(--shadow-soft)] ${
+                    a.highlight
+                      ? "border-[oklch(0.85_0.12_55)]/50 bg-gradient-to-b from-[oklch(0.97_0.04_60)] to-[oklch(0.95_0.06_30)]"
+                      : "border-border bg-gradient-to-b from-card to-[oklch(0.98_0.015_260)]"
+                  }`}>
+                  <div className="flex flex-col items-center text-center gap-1.5 mb-3">
+                    <div className="w-12 h-12 rounded-2xl flex items-center justify-center text-white font-bold shrink-0 shadow-md"
                       style={{ background: a.color }}>{a.initial}</div>
-                    <div className="flex-1 min-w-0">
-                      <h3 className="font-bold text-sm truncate">{a.name}</h3>
-                      <p className="text-[11px] text-muted-foreground truncate">{a.role}</p>
-                      <span className="inline-flex items-center gap-1 mt-1 text-[10px] font-semibold">
-                        <span className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ background: a.dot }} />
-                        {a.status}
-                      </span>
-                    </div>
+                    <h3 className="font-bold text-sm leading-tight">{a.name}</h3>
+                    <p className="text-[10px] text-muted-foreground leading-tight">{a.role}</p>
+                    <span className="inline-flex items-center gap-1 text-[10px] font-semibold">
+                      <span className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ background: a.dot }} />
+                      {a.status}
+                    </span>
                   </div>
-                  <div className="text-[11px] text-muted-foreground space-y-0.5 mb-3">
-                    <p className="font-medium text-foreground/80">{a.d1}</p>
-                    <p>{a.d2}</p>
+                  <div className="rounded-xl bg-card/70 p-2 text-center">
+                    <p className="text-[11px] font-semibold text-foreground/90 leading-tight">{a.d1}</p>
+                    <p className="text-[10px] text-muted-foreground leading-tight mt-0.5">{a.d2}</p>
                   </div>
-                  <button className="w-full text-xs font-semibold py-2 rounded-xl bg-secondary hover:gradient-primary hover:text-white transition-all flex items-center justify-center gap-1 group">
-                    Open Panel <ChevronRight className="w-3 h-3 group-hover:translate-x-0.5 transition" />
+                  <button className="mt-2 w-full h-7 rounded-lg bg-card border border-border flex items-center justify-center hover:gradient-primary hover:text-white hover:border-transparent transition group">
+                    <ChevronRight className="w-3.5 h-3.5" />
                   </button>
                 </div>
               ))}
             </div>
+
           </section>
 
           {/* Recent Activity / Task Progress / Perf */}
