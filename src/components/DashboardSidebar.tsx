@@ -1,7 +1,7 @@
 import { Link, useRouterState } from "@tanstack/react-router";
 import {
-  LayoutDashboard, Bot, ListChecks, Workflow, FileBarChart, Wallet,
-  Calendar, Store, Settings, Sparkles,
+  LayoutDashboard, Bot, ListChecks, Workflow, FileBarChart,
+  Settings, Sparkles,
 } from "lucide-react";
 
 const items = [
@@ -10,9 +10,6 @@ const items = [
   { title: "Tasks", url: "/tasks", icon: ListChecks },
   { title: "Workflow", url: "/workflow", icon: Workflow },
   { title: "Reports", url: "/reports", icon: FileBarChart },
-  { title: "Finance", url: "/finance", icon: Wallet },
-  { title: "Calendar", url: "/calendar", icon: Calendar },
-  { title: "AI Market", url: "/market", icon: Store },
   { title: "Settings", url: "/settings", icon: Settings },
 ];
 
@@ -20,33 +17,33 @@ export function DashboardSidebar() {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
 
   return (
-    <aside className="hidden lg:flex flex-col w-64 shrink-0 bg-sidebar border-r border-border h-screen sticky top-0 p-5 gap-6">
-      <div className="flex items-center gap-3">
-        <div className="w-11 h-11 rounded-2xl gradient-primary flex items-center justify-center shadow-[var(--shadow-glow)]">
+    <aside className="hidden lg:flex flex-col w-[278px] shrink-0 bg-sidebar border-r border-border/70 h-screen sticky top-0 px-5 py-6 gap-6">
+      <div className="flex items-center gap-3 px-1">
+        <div className="w-12 h-12 rounded-[18px] bg-gradient-to-br from-[oklch(0.77_0.13_235)] via-[oklch(0.72_0.18_275)] to-[oklch(0.8_0.12_300)] flex items-center justify-center shadow-[0_14px_34px_-18px_oklch(0.68_0.14_270/0.6)]">
           <Sparkles className="w-5 h-5 text-white" />
         </div>
         <div>
-          <h1 className="text-base font-bold leading-tight">DumbDumb Corp AI</h1>
-          <p className="text-[11px] text-muted-foreground">AI Command Center</p>
+          <h1 className="text-[17px] font-bold leading-tight tracking-[-0.02em]">DumbDumb Corp AI</h1>
+          <p className="text-[12px] text-muted-foreground">AI Corporation Command Center</p>
         </div>
       </div>
 
-      <nav className="flex-1 flex flex-col gap-1">
+      <nav className="flex-1 flex flex-col gap-1.5 pt-2">
         {items.map((it) => {
           const active = pathname === it.url;
           return (
             <Link
               key={it.url}
               to={it.url}
-              className={`group flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all ${
+              className={`group flex items-center gap-3 px-4 py-3.5 rounded-[20px] text-[15px] font-medium transition-all ${
                 active
-                  ? "gradient-primary text-white shadow-[var(--shadow-glow)]"
-                  : "text-sidebar-foreground hover:bg-secondary"
+                  ? "gradient-primary text-white shadow-[0_18px_35px_-22px_oklch(0.67_0.16_270/0.9)]"
+                  : "text-sidebar-foreground hover:bg-secondary/80"
               }`}
             >
-              <it.icon className="w-[18px] h-[18px]" />
+               <it.icon className="w-[17px] h-[17px]" />
               <span>{it.title}</span>
-              <span className={`ml-auto text-xs ${active ? "opacity-90" : "opacity-0 group-hover:opacity-60"}`}>›</span>
+               <span className={`ml-auto text-xs ${active ? "opacity-90" : "opacity-0 group-hover:opacity-60"}`}>›</span>
             </Link>
           );
         })}
