@@ -342,7 +342,7 @@ export function DashboardContent() {
           <section className="card-soft p-5">
             <h2 className="font-bold mb-4">System Status</h2>
             <div className="rounded-2xl p-4 mb-4 bg-gradient-to-br from-[oklch(0.95_0.04_240)] to-[oklch(0.96_0.05_280)] flex items-center justify-center h-24">
-              <div className="w-16 h-16 rounded-2xl gradient-primary flex items-center justify-center shadow-[var(--shadow-glow)] rotate-3 hover:rotate-0 transition">
+              <div className="w-16 h-16 rounded-2xl gradient-primary flex items-center justify-center shadow-[var(--shadow-glow)] rotate-3 hover:rotate-0 transition-all duration-500 ease-[cubic-bezier(0.25,0.46,0.45,0.94)]">
                 <Server className="w-7 h-7 text-white" />
               </div>
             </div>
