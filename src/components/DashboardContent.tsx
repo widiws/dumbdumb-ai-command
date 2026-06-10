@@ -318,7 +318,7 @@ export function DashboardContent() {
           <section className="card-soft p-5">
             <div className="flex items-center justify-between mb-4">
               <h2 className="font-bold">Quick Command</h2>
-              <button className="w-7 h-7 rounded-lg gradient-primary text-white flex items-center justify-center hover:scale-110 transition">
+              <button className="w-7 h-7 rounded-lg gradient-primary text-white flex items-center justify-center hover:scale-110 transition-all duration-300 ease-[cubic-bezier(0.25,0.46,0.45,0.94)]">
                 <Plus className="w-4 h-4" />
               </button>
             </div>
