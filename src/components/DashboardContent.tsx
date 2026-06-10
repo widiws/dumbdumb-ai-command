@@ -3,10 +3,12 @@ import {
   Bot, ClipboardList, FileText, Zap, Plus, Send, Terminal, FileBarChart, BarChart3,
   Network, ChevronRight, Server, Database, Cpu, Wifi, Rocket, CheckCircle2,
 } from "lucide-react";
-import { motion, useReducedMotion, type Variants } from "framer-motion";
+import { LazyMotion, domAnimation, m, useReducedMotion, type Variants } from "framer-motion";
 
 const EASE = [0.25, 0.46, 0.45, 0.94] as const;
-const GPU_STYLE = { willChange: "transform, opacity" } as const;
+// Hanya aktifkan will-change saat elemen benar-benar dianimasikan masuk.
+// Pada perangkat low-end terlalu banyak layer = boros memori GPU.
+const GPU_STYLE = { willChange: "transform" } as const;
 
 const kpis = [
   { label: "Active Agents", value: "12", delta: "+2 hari ini", gradient: "var(--gradient-blue)", icon: Bot, stroke: "oklch(0.7 0.16 240)" },
@@ -153,7 +155,9 @@ export function DashboardContent() {
   });
 
   return (
+    <LazyMotion features={domAnimation} strict>
     <main className="px-6 lg:px-8 py-6 space-y-6">
+
       {/* Hero + KPIs unified top zone */}
       <section className="relative">
         <button className="absolute top-0 right-0 z-30 flex items-center gap-2 px-4 py-2 rounded-full bg-card border border-[oklch(0.85_0.12_165)]/50 text-[oklch(0.42_0.14_165)] font-semibold text-xs shadow-[var(--shadow-card)] hover:scale-105 transition">
@@ -449,6 +453,7 @@ export function DashboardContent() {
         </aside>
       </div>
     </main>
+    </LazyMotion>
   );
 }
 
