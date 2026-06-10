@@ -290,6 +290,20 @@ export function DashboardContent() {
   const uploadCount = getTodayUploadsCount(setoran);
   const teams = getTeams(setoran);
 
+  const liveAgents = agents.map((a) => {
+    if (!pm2Procs) return a;
+    const match = pm2Procs.find((p) => (p.name ?? "").toLowerCase().includes(a.name.toLowerCase()));
+    if (!match) return a;
+    const online = (match.status ?? "").toLowerCase() === "online";
+    return {
+      ...a,
+      status: online ? "Online" : (match.status ?? a.status),
+      dot: online ? "var(--success)" : "oklch(0.7 0.2 25)",
+      d1: `CPU ${match.cpu ?? 0}%`,
+      d2: `MEM ${match.memory ? Math.round(match.memory / 1024 / 1024) + "MB" : "—"}`,
+    };
+  });
+
   const liveKpis = kpis.map((k) => {
     if (k.label === "Active Agents") {
       return { ...k, label: "Karyawan Hadir", value: setoranLoading && !setoran ? "…" : String(presentCount), delta: setoranError ? "offline · data dummy" : `${presentCount} hadir hari ini` };
