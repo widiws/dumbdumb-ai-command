@@ -132,40 +132,40 @@ export function DashboardContent() {
   return (
     <main className="px-6 lg:px-8 py-6 space-y-6">
       {/* Hero */}
-      <section className="relative overflow-hidden rounded-3xl gradient-hero border border-border p-6 lg:p-8">
-        <button className="absolute top-6 right-6 z-20 flex items-center gap-2 px-4 py-2 rounded-full bg-card border border-[oklch(0.85_0.12_165)]/50 text-[oklch(0.42_0.14_165)] font-semibold text-xs shadow-[var(--shadow-card)] hover:scale-105 transition">
+      <section className="relative overflow-hidden rounded-3xl gradient-hero border border-border px-6 lg:px-8 pt-6 pb-4 min-h-[200px]">
+        <button className="absolute top-5 right-6 z-20 flex items-center gap-2 px-4 py-2 rounded-full bg-card border border-[oklch(0.85_0.12_165)]/50 text-[oklch(0.42_0.14_165)] font-semibold text-xs shadow-[var(--shadow-card)] hover:scale-105 transition">
           <span className="w-1.5 h-1.5 rounded-full bg-[var(--success)] animate-pulse" /> Live Mode <ChevronRight className="w-3 h-3" />
         </button>
-        <div className="grid lg:grid-cols-[1.4fr_1fr] gap-6 items-center relative z-10">
-          <div className="flex items-start gap-5">
-            <div className="w-16 h-16 rounded-2xl bg-card flex items-center justify-center shadow-[var(--shadow-card)] shrink-0">
-              <svg viewBox="0 0 24 24" className="w-7 h-7" fill="url(#sg)">
-                <defs>
-                  <linearGradient id="sg" x1="0" y1="0" x2="1" y2="1">
-                    <stop offset="0%" stopColor="oklch(0.7 0.18 265)" />
-                    <stop offset="100%" stopColor="oklch(0.72 0.18 295)" />
-                  </linearGradient>
-                </defs>
-                <path d="M12 2l2.4 6.6L21 11l-6.6 2.4L12 20l-2.4-6.6L3 11l6.6-2.4z" />
-              </svg>
-            </div>
-            <div>
-              <h1 className="text-3xl lg:text-4xl font-bold leading-tight">
-                Selamat datang, <span className="text-gradient">Widi</span> <span>👋</span>
-              </h1>
-              <p className="mt-3 text-muted-foreground text-[15px] leading-relaxed max-w-xl">
-                Ini adalah pusat kendali semua AI Agent dan operasional corp kamu.
-              </p>
-            </div>
+        <div className="relative z-10 flex items-start gap-5 max-w-[62%]">
+          <div className="w-14 h-14 rounded-2xl bg-card flex items-center justify-center shadow-[var(--shadow-card)] shrink-0">
+            <svg viewBox="0 0 24 24" className="w-6 h-6" fill="url(#sg)">
+              <defs>
+                <linearGradient id="sg" x1="0" y1="0" x2="1" y2="1">
+                  <stop offset="0%" stopColor="oklch(0.7 0.18 265)" />
+                  <stop offset="100%" stopColor="oklch(0.72 0.18 295)" />
+                </linearGradient>
+              </defs>
+              <path d="M12 2l2.4 6.6L21 11l-6.6 2.4L12 20l-2.4-6.6L3 11l6.6-2.4z" />
+            </svg>
           </div>
-          <div className="relative h-56 lg:h-64">
-            <div className="absolute inset-0 bg-gradient-to-br from-[oklch(0.85_0.1_280)]/30 to-transparent blur-3xl" />
-            <img src={heroRobot} alt="AI Robot Assistant" className="relative z-10 w-full h-full object-contain drop-shadow-2xl"
-              style={{ animation: "float 6s ease-in-out infinite" }} />
+          <div>
+            <h1 className="text-3xl lg:text-[34px] font-bold leading-tight">
+              Selamat datang, <span className="text-gradient">Widi</span> <span>👋</span>
+            </h1>
+            <p className="mt-2 text-muted-foreground text-[14px] leading-relaxed">
+              Ini adalah pusat kendali semua AI Agent dan operasional corp kamu.
+            </p>
           </div>
         </div>
-        <style>{`@keyframes float { 0%,100% { transform: translateY(0) } 50% { transform: translateY(-12px) } }`}</style>
+        <div className="absolute -right-4 -top-2 bottom-0 w-[44%] pointer-events-none">
+          <div className="absolute inset-0 bg-gradient-to-l from-[oklch(0.86_0.1_280)]/40 via-[oklch(0.9_0.06_240)]/20 to-transparent blur-2xl" />
+          <img src={heroRobot} alt="AI Robot Assistant"
+            className="relative z-10 h-full w-full object-contain object-right drop-shadow-2xl"
+            style={{ animation: "float 6s ease-in-out infinite" }} />
+        </div>
+        <style>{`@keyframes float { 0%,100% { transform: translateY(0) } 50% { transform: translateY(-10px) } }`}</style>
       </section>
+
 
 
       {/* KPIs */}
