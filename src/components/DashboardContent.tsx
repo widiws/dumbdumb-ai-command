@@ -164,8 +164,8 @@ export function DashboardContent() {
           <img
             src={heroRobot}
             alt="AI Robot Assistant"
-            className="h-full w-full object-contain object-right"
-            style={{ animation: "float 6s ease-in-out infinite" }}
+            className="h-full w-full object-contain object-right motion-safe:animate-[float_6s_ease-in-out_infinite]"
+            style={{ willChange: "transform" }}
           />
         </div>
 
