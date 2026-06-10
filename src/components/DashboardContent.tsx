@@ -7,6 +7,46 @@ import { useEffect, useState } from "react";
 import heroRobot from "@/assets/hero-robot.png";
 
 const SETORAN_API = "http://160.19.166.204:5101";
+const CORP_AI_API = "http://160.19.166.204:5000";
+
+type Pm2Proc = { name: string; status?: string; pm_id?: number; cpu?: number; memory?: number };
+
+function usePm2Status() {
+  const [procs, setProcs] = useState<Pm2Proc[] | null>(null);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    let alive = true;
+    const endpoints = [
+      `${CORP_AI_API}/api/pm2`,
+      `${CORP_AI_API}/api/pm2/status`,
+      `${CORP_AI_API}/corp-ai-dashboard/api/pm2`,
+    ];
+    const fetchOnce = async () => {
+      for (const url of endpoints) {
+        try {
+          const ctl = new AbortController();
+          const t = setTimeout(() => ctl.abort(), 6000);
+          const res = await fetch(url, { signal: ctl.signal });
+          clearTimeout(t);
+          if (!res.ok) continue;
+          const json = await res.json();
+          const arr: Pm2Proc[] = Array.isArray(json) ? json
+            : Array.isArray(json?.processes) ? json.processes
+            : Array.isArray(json?.data) ? json.data : [];
+          if (!alive) return;
+          if (arr.length) { setProcs(arr); setError(null); return; }
+        } catch { /* try next */ }
+      }
+      if (alive) setError("pm2 unreachable");
+    };
+    fetchOnce();
+    const id = setInterval(fetchOnce, 60_000);
+    return () => { alive = false; clearInterval(id); };
+  }, []);
+
+  return { procs, error };
+}
 
 type SetoranState = {
   teams?: Record<string, any> | any[];
