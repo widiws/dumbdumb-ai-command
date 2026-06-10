@@ -248,22 +248,24 @@ export function DashboardContent() {
               {agents.map((a) => (
                 <motion.div
                   key={a.name}
-                  variants={{
-                    hidden: { opacity: 0, y: 28, scale: 0.96 },
-                    visible: { opacity: 1, y: 0, scale: 1, transition: { duration: 0.5, ease: [0.25, 0.46, 0.45, 0.94] } },
-                  }}
-                  whileHover={{
-                    y: -6,
-                    boxShadow: "0 12px 32px -8px oklch(0.6 0.1 265 / 0.14), 0 4px 8px -4px oklch(0.6 0.1 265 / 0.08)",
-                    borderColor: "oklch(0.88 0.02 265 / 0.6)",
-                    transition: { duration: 0.35, ease: [0.25, 0.46, 0.45, 0.94] },
-                  }}
+                  variants={fadeUpScale()}
+                  whileHover={
+                    reduce
+                      ? undefined
+                      : {
+                          y: -6,
+                          boxShadow:
+                            "0 12px 32px -8px oklch(0.6 0.1 265 / 0.14), 0 4px 8px -4px oklch(0.6 0.1 265 / 0.08)",
+                          borderColor: "oklch(0.88 0.02 265 / 0.6)",
+                          transition: { duration: 0.35, ease: EASE },
+                        }
+                  }
                   className={`rounded-2xl border p-3 cursor-pointer ${
                     a.highlight
                       ? "border-[oklch(0.85_0.12_55)]/50 bg-gradient-to-b from-[oklch(0.97_0.04_60)] to-[oklch(0.95_0.06_30)]"
                       : "border-border bg-gradient-to-b from-card to-[oklch(0.98_0.015_260)]"
                   }`}
-                  style={{ transition: "box-shadow 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94), border-color 0.3s ease" }}
+                  style={{ willChange: "transform, opacity", transition: "box-shadow 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94), border-color 0.3s ease" }}
                 >
                   <div className="flex flex-col items-center text-center gap-1.5 mb-3">
                     <div className="w-12 h-12 rounded-2xl flex items-center justify-center text-white font-bold shrink-0 shadow-md"
