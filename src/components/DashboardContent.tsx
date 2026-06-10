@@ -379,11 +379,9 @@ export function DashboardContent() {
             className="card-soft p-5"
             initial="hidden"
             whileInView="visible"
-            viewport={{ once: true, margin: "-40px" }}
-            variants={{
-              hidden: { opacity: 0, y: 24 },
-              visible: { opacity: 1, y: 0, transition: { duration: 0.55, ease: [0.25, 0.46, 0.45, 0.94] } },
-            }}
+            viewport={{ once: true, margin: "-40px", amount: 0.15 }}
+            variants={fadeUp(24, 0.55)}
+            style={GPU_STYLE}
           >
             <h2 className="font-bold mb-4">System Status</h2>
             <div className="rounded-2xl p-4 mb-4 bg-gradient-to-br from-[oklch(0.95_0.04_240)] to-[oklch(0.96_0.05_280)] flex items-center justify-center h-24">
@@ -391,15 +389,13 @@ export function DashboardContent() {
                 <Server className="w-7 h-7 text-white" />
               </div>
             </div>
-            <motion.ul className="space-y-3" variants={{ hidden: {}, visible: { transition: { staggerChildren: 0.08 } } }}>
+            <motion.ul className="space-y-3" variants={stagger(0.08)}>
               {systemStatus.map((s) => (
                 <motion.li
                   key={s.label}
-                  variants={{
-                    hidden: { opacity: 0, x: -12 },
-                    visible: { opacity: 1, x: 0, transition: { duration: 0.4, ease: [0.25, 0.46, 0.45, 0.94] } },
-                  }}
+                  variants={fadeLeft()}
                   className="flex items-center gap-3 text-sm"
+                  style={GPU_STYLE}
                 >
                   <s.icon className="w-4 h-4 text-muted-foreground" />
                   <span className="flex-1">{s.label}</span>
@@ -416,14 +412,12 @@ export function DashboardContent() {
             className="card-soft p-5"
             initial="hidden"
             whileInView="visible"
-            viewport={{ once: true, margin: "-40px" }}
-            variants={{
-              hidden: { opacity: 0, y: 24 },
-              visible: { opacity: 1, y: 0, transition: { duration: 0.55, ease: [0.25, 0.46, 0.45, 0.94] } },
-            }}
+            viewport={{ once: true, margin: "-40px", amount: 0.15 }}
+            variants={fadeUp(24, 0.55)}
+            style={GPU_STYLE}
           >
             <h2 className="font-bold mb-3">Task Queue</h2>
-            <motion.div className="space-y-3 text-sm" variants={{ hidden: {}, visible: { transition: { staggerChildren: 0.1 } } }}>
+            <motion.div className="space-y-3 text-sm" variants={stagger(0.1)}>
               {[
                 { name: "Sync CRM Data", agent: "Tubang", pct: 78 },
                 { name: "Generate Q3 Report", agent: "DumbDumb", pct: 45 },
@@ -431,10 +425,8 @@ export function DashboardContent() {
               ].map((t) => (
                 <motion.div
                   key={t.name}
-                  variants={{
-                    hidden: { opacity: 0, y: 16 },
-                    visible: { opacity: 1, y: 0, transition: { duration: 0.45, ease: [0.25, 0.46, 0.45, 0.94] } },
-                  }}
+                  variants={fadeUp(16, 0.45)}
+                  style={GPU_STYLE}
                 >
                   <div className="flex justify-between mb-1.5">
                     <span className="font-medium text-[13px] truncate">{t.name}</span>
@@ -443,10 +435,10 @@ export function DashboardContent() {
                   <div className="h-1.5 rounded-full bg-secondary overflow-hidden">
                     <motion.div
                       className="h-full gradient-primary rounded-full"
-                      initial={{ width: 0 }}
+                      initial={{ width: reduce ? `${t.pct}%` : 0 }}
                       whileInView={{ width: `${t.pct}%` }}
                       viewport={{ once: true }}
-                      transition={{ duration: 0.8, ease: [0.25, 0.46, 0.45, 0.94], delay: 0.2 }}
+                      transition={{ duration: reduce ? 0 : 0.8, ease: EASE, delay: reduce ? 0 : 0.2 }}
                     />
                   </div>
                   <p className="text-[10px] text-muted-foreground mt-1">by {t.agent}</p>
