@@ -7,6 +7,46 @@ import { useEffect, useState } from "react";
 import heroRobot from "@/assets/hero-robot.png";
 
 const SETORAN_API = "http://160.19.166.204:5101";
+const CORP_AI_API = "http://160.19.166.204:5000";
+
+type Pm2Proc = { name: string; status?: string; pm_id?: number; cpu?: number; memory?: number };
+
+function usePm2Status() {
+  const [procs, setProcs] = useState<Pm2Proc[] | null>(null);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    let alive = true;
+    const endpoints = [
+      `${CORP_AI_API}/api/pm2`,
+      `${CORP_AI_API}/api/pm2/status`,
+      `${CORP_AI_API}/corp-ai-dashboard/api/pm2`,
+    ];
+    const fetchOnce = async () => {
+      for (const url of endpoints) {
+        try {
+          const ctl = new AbortController();
+          const t = setTimeout(() => ctl.abort(), 6000);
+          const res = await fetch(url, { signal: ctl.signal });
+          clearTimeout(t);
+          if (!res.ok) continue;
+          const json = await res.json();
+          const arr: Pm2Proc[] = Array.isArray(json) ? json
+            : Array.isArray(json?.processes) ? json.processes
+            : Array.isArray(json?.data) ? json.data : [];
+          if (!alive) return;
+          if (arr.length) { setProcs(arr); setError(null); return; }
+        } catch { /* try next */ }
+      }
+      if (alive) setError("pm2 unreachable");
+    };
+    fetchOnce();
+    const id = setInterval(fetchOnce, 60_000);
+    return () => { alive = false; clearInterval(id); };
+  }, []);
+
+  return { procs, error };
+}
 
 type SetoranState = {
   teams?: Record<string, any> | any[];
@@ -243,11 +283,26 @@ function PerfChart() {
 export function DashboardContent() {
   const reduce = useReducedMotion();
   const { data: setoran, loading: setoranLoading, error: setoranError } = useSetoranState();
+  const { procs: pm2Procs, error: pm2Error } = usePm2Status();
 
   const todayAttendance = getTodayAttendance(setoran);
   const presentCount = todayAttendance.length;
   const uploadCount = getTodayUploadsCount(setoran);
   const teams = getTeams(setoran);
+
+  const liveAgents = agents.map((a) => {
+    if (!pm2Procs) return a;
+    const match = pm2Procs.find((p) => (p.name ?? "").toLowerCase().includes(a.name.toLowerCase()));
+    if (!match) return a;
+    const online = (match.status ?? "").toLowerCase() === "online";
+    return {
+      ...a,
+      status: online ? "Online" : (match.status ?? a.status),
+      dot: online ? "var(--success)" : "oklch(0.7 0.2 25)",
+      d1: `CPU ${match.cpu ?? 0}%`,
+      d2: `MEM ${match.memory ? Math.round(match.memory / 1024 / 1024) + "MB" : "—"}`,
+    };
+  });
 
   const liveKpis = kpis.map((k) => {
     if (k.label === "Active Agents") {
@@ -366,6 +421,15 @@ export function DashboardContent() {
                   <Network className="w-4 h-4 text-white" />
                 </span>
                 AI Agent Network
+                <span className="ml-2 text-[10px] font-medium inline-flex items-center gap-1 text-muted-foreground">
+                  {pm2Procs ? (
+                    <><span className="w-1.5 h-1.5 rounded-full bg-[var(--success)] animate-pulse" /> PM2 live · {pm2Procs.length}</>
+                  ) : pm2Error ? (
+                    <><span className="w-1.5 h-1.5 rounded-full bg-[oklch(0.7_0.2_25)]" /> PM2 offline</>
+                  ) : (
+                    <><Loader2 className="w-3 h-3 animate-spin" /> PM2…</>
+                  )}
+                </span>
               </h2>
               <button className="text-xs font-medium px-3 py-2 rounded-xl border border-border hover:bg-secondary transition-all duration-300 ease-[cubic-bezier(0.25,0.46,0.45,0.94)] inline-flex items-center gap-1 group">
                 Lihat Semua Agent <ChevronRight className="w-3 h-3 transition-transform duration-300 ease-[cubic-bezier(0.25,0.46,0.45,0.94)] group-hover:translate-x-0.5" />
@@ -378,7 +442,7 @@ export function DashboardContent() {
               viewport={{ once: true, margin: "-60px", amount: 0.1 }}
               variants={stagger(0.07)}
             >
-              {agents.map((a) => (
+              {liveAgents.map((a) => (
                 <m.div
                   key={a.name}
                   variants={fadeUpScale()}
