@@ -3,6 +3,7 @@ import {
   Bot, ClipboardList, FileText, Zap, Plus, Send, Terminal, FileBarChart, BarChart3,
   Network, ChevronRight, Server, Database, Cpu, Wifi, Rocket, CheckCircle2,
 } from "lucide-react";
+import { motion } from "framer-motion";
 
 const kpis = [
   { label: "Active Agents", value: "12", delta: "+2 hari ini", gradient: "var(--gradient-blue)", icon: Bot, stroke: "oklch(0.7 0.16 240)" },
@@ -204,18 +205,32 @@ export function DashboardContent() {
                 </span>
                 AI Agent Network
               </h2>
-              <button className="text-xs font-medium px-3 py-2 rounded-xl border border-border hover:bg-secondary transition inline-flex items-center gap-1">
-                Lihat Semua Agent <ChevronRight className="w-3 h-3" />
+              <button className="text-xs font-medium px-3 py-2 rounded-xl border border-border hover:bg-secondary transition-all duration-300 ease-[cubic-bezier(0.25,0.46,0.45,0.94)] inline-flex items-center gap-1 group">
+                Lihat Semua Agent <ChevronRight className="w-3 h-3 transition-transform duration-300 ease-[cubic-bezier(0.25,0.46,0.45,0.94)] group-hover:translate-x-0.5" />
               </button>
             </div>
             <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-6 gap-3">
               {agents.map((a) => (
-                <div key={a.name}
-                  className={`rounded-2xl border p-3 transition-all hover:-translate-y-1 hover:shadow-[var(--shadow-soft)] ${
+                <motion.div
+                  key={a.name}
+                  whileHover={{ y: -6, transition: { duration: 0.35, ease: [0.25, 0.46, 0.45, 0.94] } }}
+                  className={`rounded-2xl border p-3 cursor-pointer ${
                     a.highlight
                       ? "border-[oklch(0.85_0.12_55)]/50 bg-gradient-to-b from-[oklch(0.97_0.04_60)] to-[oklch(0.95_0.06_30)]"
                       : "border-border bg-gradient-to-b from-card to-[oklch(0.98_0.015_260)]"
-                  }`}>
+                  }`}
+                  style={{
+                    transition: "box-shadow 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94), border-color 0.3s ease",
+                  }}
+                  onHoverStart={(e) => {
+                    (e.currentTarget as HTMLElement).style.boxShadow = "0 12px 32px -8px oklch(0.6 0.1 265 / 0.14), 0 4px 8px -4px oklch(0.6 0.1 265 / 0.08)";
+                    (e.currentTarget as HTMLElement).style.borderColor = "oklch(0.88 0.02 265 / 0.6)";
+                  }}
+                  onHoverEnd={(e) => {
+                    (e.currentTarget as HTMLElement).style.boxShadow = "";
+                    (e.currentTarget as HTMLElement).style.borderColor = "";
+                  }}
+                >
                   <div className="flex flex-col items-center text-center gap-1.5 mb-3">
                     <div className="w-12 h-12 rounded-2xl flex items-center justify-center text-white font-bold shrink-0 shadow-md"
                       style={{ background: a.color }}>{a.initial}</div>
@@ -230,10 +245,10 @@ export function DashboardContent() {
                     <p className="text-[11px] font-semibold text-foreground/90 leading-tight">{a.d1}</p>
                     <p className="text-[10px] text-muted-foreground leading-tight mt-0.5">{a.d2}</p>
                   </div>
-                  <button className="mt-2 w-full h-7 rounded-lg bg-card border border-border flex items-center justify-center hover:gradient-primary hover:text-white hover:border-transparent transition group">
-                    <ChevronRight className="w-3.5 h-3.5" />
+                  <button className="mt-2 w-full h-7 rounded-lg bg-card border border-border flex items-center justify-center hover:gradient-primary hover:text-white hover:border-transparent transition-all duration-300 ease-[cubic-bezier(0.25,0.46,0.45,0.94)] group">
+                    <ChevronRight className="w-3.5 h-3.5 transition-transform duration-300 ease-[cubic-bezier(0.25,0.46,0.45,0.94)] group-hover:translate-x-0.5" />
                   </button>
-                </div>
+                </motion.div>
               ))}
             </div>
 
@@ -303,14 +318,14 @@ export function DashboardContent() {
           <section className="card-soft p-5">
             <div className="flex items-center justify-between mb-4">
               <h2 className="font-bold">Quick Command</h2>
-              <button className="w-7 h-7 rounded-lg gradient-primary text-white flex items-center justify-center hover:scale-110 transition">
+              <button className="w-7 h-7 rounded-lg gradient-primary text-white flex items-center justify-center hover:scale-110 transition-all duration-300 ease-[cubic-bezier(0.25,0.46,0.45,0.94)]">
                 <Plus className="w-4 h-4" />
               </button>
             </div>
             <ul className="space-y-2.5">
               {quickCommands.map((q) => (
                 <li key={q.title}>
-                  <button className="w-full flex items-center gap-3 p-2.5 rounded-xl hover:bg-secondary transition text-left">
+                  <button className="w-full flex items-center gap-3 p-2.5 rounded-xl hover:bg-secondary transition-all duration-300 ease-[cubic-bezier(0.25,0.46,0.45,0.94)] text-left group">
                     <span className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0" style={{ background: q.grad }}>
                       <q.icon className="w-4 h-4 text-white" />
                     </span>
@@ -327,7 +342,7 @@ export function DashboardContent() {
           <section className="card-soft p-5">
             <h2 className="font-bold mb-4">System Status</h2>
             <div className="rounded-2xl p-4 mb-4 bg-gradient-to-br from-[oklch(0.95_0.04_240)] to-[oklch(0.96_0.05_280)] flex items-center justify-center h-24">
-              <div className="w-16 h-16 rounded-2xl gradient-primary flex items-center justify-center shadow-[var(--shadow-glow)] rotate-3 hover:rotate-0 transition">
+              <div className="w-16 h-16 rounded-2xl gradient-primary flex items-center justify-center shadow-[var(--shadow-glow)] rotate-3 hover:rotate-0 transition-all duration-500 ease-[cubic-bezier(0.25,0.46,0.45,0.94)]">
                 <Server className="w-7 h-7 text-white" />
               </div>
             </div>
