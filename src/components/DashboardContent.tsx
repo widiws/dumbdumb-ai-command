@@ -138,13 +138,13 @@ export function DashboardContent() {
           <span className="w-1.5 h-1.5 rounded-full bg-[var(--success)] animate-pulse" /> Live Mode <ChevronRight className="w-3 h-3" />
         </button>
 
-        {/* Robot illustration on the right (overlaps hero + kpi vertical zone) */}
-        <div className="hidden md:block absolute right-0 -top-4 w-[34%] h-[calc(100%+1rem)] pointer-events-none z-10">
-          <div className="absolute inset-0 bg-gradient-to-l from-[oklch(0.86_0.1_280)]/30 via-[oklch(0.9_0.06_240)]/15 to-transparent blur-3xl" />
+        {/* Robot illustration scene on the right (overlaps hero + kpi vertical zone) */}
+        <div className="hidden md:block absolute right-0 -top-6 w-[42%] h-[calc(100%+2rem)] pointer-events-none z-10 overflow-hidden">
+          <div className="absolute inset-0 bg-gradient-to-l from-transparent via-transparent to-[var(--background)] [mask-image:linear-gradient(to_right,transparent,black_18%)]" />
           <img
             src={heroRobot}
             alt="AI Robot Assistant"
-            className="relative z-10 h-full w-full object-contain object-right drop-shadow-2xl"
+            className="relative z-10 h-full w-full object-contain object-right"
             style={{ animation: "float 6s ease-in-out infinite" }}
           />
         </div>
