@@ -3,10 +3,12 @@ import {
   Bot, ClipboardList, FileText, Zap, Plus, Send, Terminal, FileBarChart, BarChart3,
   Network, ChevronRight, Server, Database, Cpu, Wifi, Rocket, CheckCircle2,
 } from "lucide-react";
-import { motion, useReducedMotion, type Variants } from "framer-motion";
+import { LazyMotion, domAnimation, m, useReducedMotion, type Variants } from "framer-motion";
 
 const EASE = [0.25, 0.46, 0.45, 0.94] as const;
-const GPU_STYLE = { willChange: "transform, opacity" } as const;
+// Hanya aktifkan will-change saat elemen benar-benar dianimasikan masuk.
+// Pada perangkat low-end terlalu banyak layer = boros memori GPU.
+const GPU_STYLE = { willChange: "transform" } as const;
 
 const kpis = [
   { label: "Active Agents", value: "12", delta: "+2 hari ini", gradient: "var(--gradient-blue)", icon: Bot, stroke: "oklch(0.7 0.16 240)" },
@@ -153,7 +155,9 @@ export function DashboardContent() {
   });
 
   return (
+    <LazyMotion features={domAnimation} strict>
     <main className="px-6 lg:px-8 py-6 space-y-6">
+
       {/* Hero + KPIs unified top zone */}
       <section className="relative">
         <button className="absolute top-0 right-0 z-30 flex items-center gap-2 px-4 py-2 rounded-full bg-card border border-[oklch(0.85_0.12_165)]/50 text-[oklch(0.42_0.14_165)] font-semibold text-xs shadow-[var(--shadow-card)] hover:scale-105 transition">
@@ -219,7 +223,7 @@ export function DashboardContent() {
       <div className="grid grid-cols-1 xl:grid-cols-[1fr_320px] gap-6">
         <div className="space-y-6 min-w-0">
           {/* Agent Network */}
-          <motion.section
+          <m.section
             className="card-soft p-6"
             initial="hidden"
             whileInView="visible"
@@ -238,7 +242,7 @@ export function DashboardContent() {
                 Lihat Semua Agent <ChevronRight className="w-3 h-3 transition-transform duration-300 ease-[cubic-bezier(0.25,0.46,0.45,0.94)] group-hover:translate-x-0.5" />
               </button>
             </div>
-            <motion.div
+            <m.div
               className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-6 gap-3"
               initial="hidden"
               whileInView="visible"
@@ -246,26 +250,15 @@ export function DashboardContent() {
               variants={stagger(0.07)}
             >
               {agents.map((a) => (
-                <motion.div
+                <m.div
                   key={a.name}
                   variants={fadeUpScale()}
-                  whileHover={
-                    reduce
-                      ? undefined
-                      : {
-                          y: -6,
-                          boxShadow:
-                            "0 12px 32px -8px oklch(0.6 0.1 265 / 0.14), 0 4px 8px -4px oklch(0.6 0.1 265 / 0.08)",
-                          borderColor: "oklch(0.88 0.02 265 / 0.6)",
-                          transition: { duration: 0.35, ease: EASE },
-                        }
-                  }
-                  className={`rounded-2xl border p-3 cursor-pointer ${
+                  whileHover={reduce ? undefined : { y: -6, transition: { duration: 0.3, ease: EASE } }}
+                  className={`agent-card rounded-2xl border p-3 cursor-pointer ${
                     a.highlight
                       ? "border-[oklch(0.85_0.12_55)]/50 bg-gradient-to-b from-[oklch(0.97_0.04_60)] to-[oklch(0.95_0.06_30)]"
                       : "border-border bg-gradient-to-b from-card to-[oklch(0.98_0.015_260)]"
                   }`}
-                  style={{ willChange: "transform, opacity", transition: "box-shadow 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94), border-color 0.3s ease" }}
                 >
                   <div className="flex flex-col items-center text-center gap-1.5 mb-3">
                     <div className="w-12 h-12 rounded-2xl flex items-center justify-center text-white font-bold shrink-0 shadow-md"
@@ -284,11 +277,11 @@ export function DashboardContent() {
                   <button className="mt-2 w-full h-7 rounded-lg bg-card border border-border flex items-center justify-center hover:gradient-primary hover:text-white hover:border-transparent transition-all duration-300 ease-[cubic-bezier(0.25,0.46,0.45,0.94)] group">
                     <ChevronRight className="w-3.5 h-3.5 transition-transform duration-300 ease-[cubic-bezier(0.25,0.46,0.45,0.94)] group-hover:translate-x-0.5" />
                   </button>
-                </motion.div>
+                </m.div>
               ))}
-            </motion.div>
+            </m.div>
 
-          </motion.section>
+          </m.section>
 
           {/* Recent Activity / Task Progress / Perf */}
           <section className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -375,7 +368,7 @@ export function DashboardContent() {
             </ul>
           </section>
 
-          <motion.section
+          <m.section
             className="card-soft p-5"
             initial="hidden"
             whileInView="visible"
@@ -389,9 +382,9 @@ export function DashboardContent() {
                 <Server className="w-7 h-7 text-white" />
               </div>
             </div>
-            <motion.ul className="space-y-3" variants={stagger(0.08)}>
+            <m.ul className="space-y-3" variants={stagger(0.08)}>
               {systemStatus.map((s) => (
-                <motion.li
+                <m.li
                   key={s.label}
                   variants={fadeLeft()}
                   className="flex items-center gap-3 text-sm"
@@ -403,12 +396,12 @@ export function DashboardContent() {
                     <span className="w-1.5 h-1.5 rounded-full bg-[var(--success)] animate-pulse" />
                     {s.val}
                   </span>
-                </motion.li>
+                </m.li>
               ))}
-            </motion.ul>
-          </motion.section>
+            </m.ul>
+          </m.section>
 
-          <motion.section
+          <m.section
             className="card-soft p-5"
             initial="hidden"
             whileInView="visible"
@@ -417,13 +410,13 @@ export function DashboardContent() {
             style={GPU_STYLE}
           >
             <h2 className="font-bold mb-3">Task Queue</h2>
-            <motion.div className="space-y-3 text-sm" variants={stagger(0.1)}>
+            <m.div className="space-y-3 text-sm" variants={stagger(0.1)}>
               {[
                 { name: "Sync CRM Data", agent: "Tubang", pct: 78 },
                 { name: "Generate Q3 Report", agent: "DumbDumb", pct: 45 },
                 { name: "Crypto Market Scan", agent: "Trading Bot", pct: 92 },
               ].map((t) => (
-                <motion.div
+                <m.div
                   key={t.name}
                   variants={fadeUp(16, 0.45)}
                   style={GPU_STYLE}
@@ -433,7 +426,7 @@ export function DashboardContent() {
                     <span className="text-[11px] text-muted-foreground">{t.pct}%</span>
                   </div>
                   <div className="h-1.5 rounded-full bg-secondary overflow-hidden">
-                    <motion.div
+                    <m.div
                       className="h-full gradient-primary rounded-full"
                       initial={{ width: reduce ? `${t.pct}%` : 0 }}
                       whileInView={{ width: `${t.pct}%` }}
@@ -442,13 +435,14 @@ export function DashboardContent() {
                     />
                   </div>
                   <p className="text-[10px] text-muted-foreground mt-1">by {t.agent}</p>
-                </motion.div>
+                </m.div>
               ))}
-            </motion.div>
-          </motion.section>
+            </m.div>
+          </m.section>
         </aside>
       </div>
     </main>
+    </LazyMotion>
   );
 }
 
