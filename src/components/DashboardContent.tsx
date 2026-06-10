@@ -43,20 +43,22 @@ const systemStatus = [
   { label: "API Connection", val: "Stable", icon: Wifi, ok: true },
 ];
 
-function Sparkline({ stroke }: { stroke: string }) {
+function Sparkline({ stroke, id }: { stroke: string; id: string }) {
+  const gid = `spark-${id}`;
   return (
-    <svg viewBox="0 0 120 32" className="w-full h-8 mt-3">
+    <svg viewBox="0 0 120 32" className="w-full h-8 mt-3" preserveAspectRatio="none">
       <defs>
-        <linearGradient id={`f-${stroke}`} x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stopColor={stroke} stopOpacity="0.25" />
+        <linearGradient id={gid} x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stopColor={stroke} stopOpacity="0.3" />
           <stop offset="100%" stopColor={stroke} stopOpacity="0" />
         </linearGradient>
       </defs>
-      <path d="M0 24 Q15 18 25 20 T50 14 T75 18 T100 10 T120 14 L120 32 L0 32 Z" fill={`url(#f-${stroke})`} />
+      <path d="M0 24 Q15 18 25 20 T50 14 T75 18 T100 10 T120 14 L120 32 L0 32 Z" fill={`url(#${gid})`} />
       <path d="M0 24 Q15 18 25 20 T50 14 T75 18 T100 10 T120 14" fill="none" stroke={stroke} strokeWidth="2" strokeLinecap="round" />
     </svg>
   );
 }
+
 
 function Donut() {
   const total = 48;
