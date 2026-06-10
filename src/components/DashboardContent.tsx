@@ -223,11 +223,9 @@ export function DashboardContent() {
             className="card-soft p-6"
             initial="hidden"
             whileInView="visible"
-            viewport={{ once: true, margin: "-60px" }}
-            variants={{
-              hidden: { opacity: 0, y: 30 },
-              visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: [0.25, 0.46, 0.45, 0.94] } },
-            }}
+            viewport={{ once: true, margin: "-60px", amount: 0.15 }}
+            variants={fadeUp(30, 0.6)}
+            style={GPU_STYLE}
           >
             <div className="flex items-center justify-between mb-5">
               <h2 className="flex items-center gap-2 font-bold text-lg">
@@ -244,11 +242,8 @@ export function DashboardContent() {
               className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-6 gap-3"
               initial="hidden"
               whileInView="visible"
-              viewport={{ once: true, margin: "-60px" }}
-              variants={{
-                hidden: {},
-                visible: { transition: { staggerChildren: 0.07 } },
-              }}
+              viewport={{ once: true, margin: "-60px", amount: 0.1 }}
+              variants={stagger(0.07)}
             >
               {agents.map((a) => (
                 <motion.div
