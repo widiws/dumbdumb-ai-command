@@ -283,6 +283,7 @@ function PerfChart() {
 export function DashboardContent() {
   const reduce = useReducedMotion();
   const { data: setoran, loading: setoranLoading, error: setoranError } = useSetoranState();
+  const { procs: pm2Procs, error: pm2Error } = usePm2Status();
 
   const todayAttendance = getTodayAttendance(setoran);
   const presentCount = todayAttendance.length;
