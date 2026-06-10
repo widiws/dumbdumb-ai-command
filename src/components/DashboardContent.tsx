@@ -325,7 +325,7 @@ export function DashboardContent() {
             <ul className="space-y-2.5">
               {quickCommands.map((q) => (
                 <li key={q.title}>
-                  <button className="w-full flex items-center gap-3 p-2.5 rounded-xl hover:bg-secondary transition text-left">
+                  <button className="w-full flex items-center gap-3 p-2.5 rounded-xl hover:bg-secondary transition-all duration-300 ease-[cubic-bezier(0.25,0.46,0.45,0.94)] text-left group">
                     <span className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0" style={{ background: q.grad }}>
                       <q.icon className="w-4 h-4 text-white" />
                     </span>
