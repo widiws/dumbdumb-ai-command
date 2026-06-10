@@ -1,5 +1,4 @@
 import heroRobot from "@/assets/hero-robot.png";
-import referenceHeroTop from "@/assets/reference-hero-top.png";
 import {
   Bot, ClipboardList, FileText, Zap, Plus, Send, Terminal, FileBarChart, BarChart3,
   Network, ChevronRight, Server, Database, Cpu, Wifi, Rocket, CheckCircle2,
