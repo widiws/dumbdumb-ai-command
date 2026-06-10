@@ -213,7 +213,7 @@ export function DashboardContent() {
             ))}
           </div>
         </div>
-        <style>{`@keyframes float { 0%,100% { transform: translateY(0) } 50% { transform: translateY(-10px) } }`}</style>
+        
       </section>
 
       <div className="grid grid-cols-1 xl:grid-cols-[1fr_320px] gap-6">
