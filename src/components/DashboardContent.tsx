@@ -412,6 +412,69 @@ export function DashboardContent() {
 
           </m.section>
 
+          {/* Tim Produksi (live dari Setoran API) */}
+          <section className="card-soft p-6">
+            <div className="flex items-center justify-between mb-5">
+              <h2 className="flex items-center gap-2 font-bold text-lg">
+                <span className="w-8 h-8 rounded-xl gradient-primary flex items-center justify-center">
+                  <Users className="w-4 h-4 text-white" />
+                </span>
+                Tim Produksi
+              </h2>
+              <span className="text-[11px] text-muted-foreground inline-flex items-center gap-1.5">
+                {setoranLoading && !setoran ? (
+                  <><Loader2 className="w-3 h-3 animate-spin" /> Memuat…</>
+                ) : setoranError ? (
+                  <><span className="w-1.5 h-1.5 rounded-full bg-[oklch(0.7_0.2_25)]" /> Offline · data dummy</>
+                ) : (
+                  <><span className="w-1.5 h-1.5 rounded-full bg-[var(--success)] animate-pulse" /> Live · {setoran?.today ?? "hari ini"}</>
+                )}
+              </span>
+            </div>
+            {(() => {
+              const display = teams.length > 0 ? teams : [
+                { name: "Tim Alpha", members: 5, uploads: 12 },
+                { name: "Tim Beta", members: 4, uploads: 8 },
+                { name: "Tim Gamma", members: 6, uploads: 15 },
+              ];
+              return (
+                <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-3">
+                  {display.map((t) => (
+                    <div key={t.name} className="rounded-2xl border border-border p-4 bg-gradient-to-b from-card to-[oklch(0.98_0.015_260)]">
+                      <div className="flex items-center gap-3">
+                        <div className="w-10 h-10 rounded-xl gradient-primary flex items-center justify-center text-white font-bold shrink-0">
+                          {t.name.charAt(0).toUpperCase()}
+                        </div>
+                        <div className="min-w-0">
+                          <p className="font-semibold text-sm truncate">{t.name}</p>
+                          <p className="text-[11px] text-muted-foreground">Tim Produksi</p>
+                        </div>
+                      </div>
+                      <div className="grid grid-cols-2 gap-2 mt-3">
+                        <div className="rounded-xl bg-card/70 p-2 flex items-center gap-2">
+                          <Users className="w-3.5 h-3.5 text-muted-foreground" />
+                          <div className="min-w-0">
+                            <p className="text-[10px] text-muted-foreground leading-none">Anggota</p>
+                            <p className="text-sm font-bold leading-tight">{t.members}</p>
+                          </div>
+                        </div>
+                        <div className="rounded-xl bg-card/70 p-2 flex items-center gap-2">
+                          <Upload className="w-3.5 h-3.5 text-muted-foreground" />
+                          <div className="min-w-0">
+                            <p className="text-[10px] text-muted-foreground leading-none">Upload</p>
+                            <p className="text-sm font-bold leading-tight">{t.uploads}</p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              );
+            })()}
+          </section>
+
+
+
           {/* Recent Activity / Task Progress / Perf */}
           <section className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             <div className="card-soft p-6 lg:col-span-1">
