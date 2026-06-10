@@ -479,28 +479,39 @@ export function DashboardContent() {
           <section className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             <div className="card-soft p-6 lg:col-span-1">
               <div className="flex items-center justify-between mb-4">
-                <h2 className="font-bold flex items-center gap-2"><Sparkle /> Aktivitas Hari Ini</h2>
-                <select className="text-xs bg-secondary rounded-lg px-2 py-1 border-none focus:outline-none">
-                  <option>Hari Ini</option>
-                </select>
+                <h2 className="font-bold flex items-center gap-2"><Sparkle /> Absensi Hari Ini</h2>
+                <span className="text-[10px] text-muted-foreground inline-flex items-center gap-1">
+                  {setoranLoading && !setoran ? <Loader2 className="w-3 h-3 animate-spin" /> :
+                    setoranError ? <span className="text-[oklch(0.6_0.18_25)]">offline</span> :
+                    <><span className="w-1.5 h-1.5 rounded-full bg-[var(--success)] animate-pulse" /> live</>}
+                </span>
               </div>
-              <ul className="space-y-3.5">
-                {activities.map((a, i) => (
-                  <li key={i} className="flex gap-3 text-sm">
-                    <span className="text-[11px] font-mono text-muted-foreground w-10 pt-0.5">{a.time}</span>
-                    <span className="w-7 h-7 rounded-lg flex items-center justify-center shrink-0"
-                      style={{ background: `color-mix(in oklab, ${a.color} 20%, white)` }}>
-                      <Bot className="w-3.5 h-3.5" style={{ color: a.color }} />
-                    </span>
-                    <div className="flex-1 min-w-0">
-                      <p className="text-[13px]"><b>{a.who}</b> <span className="text-muted-foreground">{a.action}</span></p>
-                      <p className="text-[11px] text-muted-foreground truncate">{a.sub}</p>
-                    </div>
-                    <CheckCircle2 className="w-4 h-4 text-[var(--success)] shrink-0" />
-                  </li>
-                ))}
-              </ul>
+              {setoranLoading && !setoran ? (
+                <div className="flex items-center justify-center py-10 text-muted-foreground text-sm">
+                  <Loader2 className="w-4 h-4 animate-spin mr-2" /> Memuat absensi…
+                </div>
+              ) : (
+                <ul className="space-y-3.5">
+                  {(todayAttendance.length > 0 ? todayAttendance : activities.map(a => ({ name: a.who, time: a.time, status: a.action }))).slice(0, 6).map((a, i) => (
+                    <li key={i} className="flex gap-3 text-sm">
+                      <span className="text-[11px] font-mono text-muted-foreground w-12 pt-0.5">{a.time}</span>
+                      <span className="w-7 h-7 rounded-lg flex items-center justify-center shrink-0 bg-[oklch(0.95_0.04_165)]">
+                        <Users className="w-3.5 h-3.5 text-[var(--success)]" />
+                      </span>
+                      <div className="flex-1 min-w-0">
+                        <p className="text-[13px] truncate"><b>{a.name}</b></p>
+                        <p className="text-[11px] text-muted-foreground truncate">{a.status ?? "Masuk kerja"}</p>
+                      </div>
+                      <CheckCircle2 className="w-4 h-4 text-[var(--success)] shrink-0" />
+                    </li>
+                  ))}
+                  {todayAttendance.length === 0 && !setoranError && (
+                    <li className="text-xs text-muted-foreground text-center py-2">Belum ada absensi hari ini</li>
+                  )}
+                </ul>
+              )}
             </div>
+
 
             <div className="card-soft p-6">
               <div className="flex items-center justify-between mb-4">
