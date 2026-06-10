@@ -3,6 +3,7 @@ import {
   Network, ChevronRight, Server, Database, Cpu, Wifi, Rocket, CheckCircle2,
 } from "lucide-react";
 import { LazyMotion, domAnimation, m, useReducedMotion, type Variants } from "framer-motion";
+import heroRobot from "@/assets/hero-robot.png";
 
 const EASE = [0.25, 0.46, 0.45, 0.94] as const;
 // Hanya aktifkan will-change saat elemen benar-benar dianimasikan masuk.
@@ -158,10 +159,25 @@ export function DashboardContent() {
     <main className="px-6 lg:px-8 py-6 space-y-6">
 
       {/* Hero + KPIs unified top zone */}
-      <section className="relative">
+      <section className="relative overflow-hidden rounded-3xl">
+        {/* Background AI robot image */}
+        <div className="absolute inset-0 -z-10 pointer-events-none select-none">
+          <img
+            src={heroRobot}
+            alt=""
+            aria-hidden="true"
+            className="absolute right-0 top-0 h-full w-auto object-contain object-right opacity-60 md:opacity-70 motion-safe:animate-[float_8s_ease-in-out_infinite]"
+            style={{ maskImage: "linear-gradient(to left, black 40%, transparent 95%)", WebkitMaskImage: "linear-gradient(to left, black 40%, transparent 95%)" }}
+            loading="eager"
+            decoding="async"
+          />
+          <div className="absolute inset-0 bg-gradient-to-r from-background via-background/85 to-transparent" />
+        </div>
+
         <button className="absolute top-0 right-0 z-30 flex items-center gap-2 px-4 py-2 rounded-full bg-card border border-[oklch(0.85_0.12_165)]/50 text-[oklch(0.42_0.14_165)] font-semibold text-xs shadow-[var(--shadow-card)] hover:scale-105 transition">
           <span className="w-1.5 h-1.5 rounded-full bg-[var(--success)] animate-pulse" /> Live Mode <ChevronRight className="w-3 h-3" />
         </button>
+
 
 
         <div className="relative z-20 md:max-w-[66%] space-y-5">
