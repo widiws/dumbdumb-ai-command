@@ -1,9 +1,115 @@
 import {
   Bot, ClipboardList, FileText, Zap, Plus, Send, Terminal, FileBarChart, BarChart3,
-  Network, ChevronRight, Server, Database, Cpu, Wifi, Rocket, CheckCircle2,
+  Network, ChevronRight, Server, Database, Cpu, Wifi, Rocket, CheckCircle2, Users, Upload, Loader2,
 } from "lucide-react";
 import { LazyMotion, domAnimation, m, useReducedMotion, type Variants } from "framer-motion";
+import { useEffect, useState } from "react";
 import heroRobot from "@/assets/hero-robot.png";
+
+const SETORAN_API = "http://160.19.166.204:5101";
+
+type SetoranState = {
+  teams?: Record<string, any> | any[];
+  members?: Record<string, any> | any[];
+  attendance?: Record<string, any>;
+  uploads?: Record<string, any> | any[];
+  today?: string;
+};
+
+function useSetoranState() {
+  const [data, setData] = useState<SetoranState | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    let alive = true;
+    const fetchOnce = async () => {
+      try {
+        const ctl = new AbortController();
+        const t = setTimeout(() => ctl.abort(), 8000);
+        const res = await fetch(`${SETORAN_API}/api/state`, { signal: ctl.signal });
+        clearTimeout(t);
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const json = await res.json();
+        if (!alive) return;
+        setData(json);
+        setError(null);
+      } catch (e: any) {
+        if (!alive) return;
+        setError(e?.message ?? "fetch failed");
+      } finally {
+        if (alive) setLoading(false);
+      }
+    };
+    fetchOnce();
+    const id = setInterval(fetchOnce, 60_000);
+    return () => { alive = false; clearInterval(id); };
+  }, []);
+
+  return { data, loading, error };
+}
+
+// Normalisasi struktur attendance hari ini -> array { name, time }
+function getTodayAttendance(state: SetoranState | null): Array<{ name: string; time: string; status?: string }> {
+  if (!state) return [];
+  const today = state.today ?? new Date().toISOString().slice(0, 10);
+  const att = (state.attendance ?? {}) as Record<string, any>;
+  const todayAtt = att[today] ?? att[Object.keys(att).pop() ?? ""] ?? {};
+  if (!todayAtt || typeof todayAtt !== "object") return [];
+  return Object.entries(todayAtt).map(([key, v]: [string, any]) => {
+    if (typeof v === "string") return { name: key, time: v };
+    return { name: v?.name ?? key, time: v?.time ?? v?.checkin ?? "-", status: v?.status };
+  });
+}
+
+function getTodayUploadsCount(state: SetoranState | null): number {
+  if (!state) return 0;
+  const today = state.today ?? new Date().toISOString().slice(0, 10);
+  const up = state.uploads as any;
+  if (!up) return 0;
+  if (Array.isArray(up)) {
+    return up.filter((u) => (u?.date ?? u?.time ?? "").toString().startsWith(today)).length;
+  }
+  const todayUp = up[today];
+  if (Array.isArray(todayUp)) return todayUp.length;
+  if (todayUp && typeof todayUp === "object") return Object.keys(todayUp).length;
+  // sum all teams for today
+  let sum = 0;
+  for (const v of Object.values(up)) {
+    if (Array.isArray(v)) sum += v.length;
+    else if (v && typeof v === "object") sum += Object.keys(v).length;
+  }
+  return sum;
+}
+
+function getTeams(state: SetoranState | null): Array<{ name: string; members: number; uploads: number }> {
+  if (!state?.teams) return [];
+  const today = state.today ?? new Date().toISOString().slice(0, 10);
+  const teamsRaw: any = state.teams;
+  const uploads: any = state.uploads ?? {};
+  const entries = Array.isArray(teamsRaw)
+    ? teamsRaw.map((t, i) => [t?.id ?? t?.name ?? String(i), t] as [string, any])
+    : Object.entries(teamsRaw);
+
+  return entries.map(([key, t]) => {
+    const name = (typeof t === "object" && t?.name) ? t.name : key;
+    let membersCount = 0;
+    if (Array.isArray(t)) membersCount = t.length;
+    else if (Array.isArray(t?.members)) membersCount = t.members.length;
+    else if (t?.members && typeof t.members === "object") membersCount = Object.keys(t.members).length;
+
+    let teamUploads = 0;
+    const u = uploads[key] ?? uploads[name];
+    if (Array.isArray(u)) {
+      teamUploads = u.filter((x) => !x?.date || x.date.toString().startsWith(today)).length;
+    } else if (u && typeof u === "object") {
+      const todayList = u[today];
+      teamUploads = Array.isArray(todayList) ? todayList.length : (todayList ? Object.keys(todayList).length : 0);
+    }
+    return { name, members: membersCount, uploads: teamUploads };
+  });
+}
+
 
 const EASE = [0.25, 0.46, 0.45, 0.94] as const;
 // Hanya aktifkan will-change saat elemen benar-benar dianimasikan masuk.
