@@ -347,26 +347,42 @@ export function DashboardContent() {
             </ul>
           </section>
 
-          <section className="card-soft p-5">
+          <motion.section
+            className="card-soft p-5"
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: "-40px" }}
+            variants={{
+              hidden: { opacity: 0, y: 24 },
+              visible: { opacity: 1, y: 0, transition: { duration: 0.55, ease: [0.25, 0.46, 0.45, 0.94] } },
+            }}
+          >
             <h2 className="font-bold mb-4">System Status</h2>
             <div className="rounded-2xl p-4 mb-4 bg-gradient-to-br from-[oklch(0.95_0.04_240)] to-[oklch(0.96_0.05_280)] flex items-center justify-center h-24">
               <div className="w-16 h-16 rounded-2xl gradient-primary flex items-center justify-center shadow-[var(--shadow-glow)] rotate-3 hover:rotate-0 transition-all duration-500 ease-[cubic-bezier(0.25,0.46,0.45,0.94)]">
                 <Server className="w-7 h-7 text-white" />
               </div>
             </div>
-            <ul className="space-y-3">
+            <motion.ul className="space-y-3" variants={{ hidden: {}, visible: { transition: { staggerChildren: 0.08 } } }}>
               {systemStatus.map((s) => (
-                <li key={s.label} className="flex items-center gap-3 text-sm">
+                <motion.li
+                  key={s.label}
+                  variants={{
+                    hidden: { opacity: 0, x: -12 },
+                    visible: { opacity: 1, x: 0, transition: { duration: 0.4, ease: [0.25, 0.46, 0.45, 0.94] } },
+                  }}
+                  className="flex items-center gap-3 text-sm"
+                >
                   <s.icon className="w-4 h-4 text-muted-foreground" />
                   <span className="flex-1">{s.label}</span>
                   <span className="text-xs font-semibold text-[var(--success)] flex items-center gap-1">
                     <span className="w-1.5 h-1.5 rounded-full bg-[var(--success)] animate-pulse" />
                     {s.val}
                   </span>
-                </li>
+                </motion.li>
               ))}
-            </ul>
-          </section>
+            </motion.ul>
+          </motion.section>
 
           <section className="card-soft p-5">
             <h2 className="font-bold mb-3">Task Queue</h2>
