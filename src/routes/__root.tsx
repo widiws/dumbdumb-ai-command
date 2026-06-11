@@ -79,7 +79,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { name: "viewport", content: "width=device-width, initial-scale=1" },
       { title: "Sandjaya Corp" },
       { name: "description", content: "Corp AI Command Center" },
-      { name: "author", content: "DumbDumb Corp" },
+      { name: "author", content: "Sandjaya Corp" },
       { property: "og:title", content: "Sandjaya Corp" },
       { property: "og:description", content: "Corp AI Command Center" },
       { property: "og:type", content: "website" },
