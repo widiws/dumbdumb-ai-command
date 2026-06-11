@@ -6,8 +6,8 @@ import { LazyMotion, domAnimation, m, useReducedMotion, type Variants } from "fr
 import { useEffect, useState } from "react";
 import heroRobot from "@/assets/hero-robot.png";
 
-const SETORAN_API = "http://160.19.166.204:5101";
-const CORP_AI_API = "http://160.19.166.204:5000";
+const SETORAN_API = "https://api.sandjayacorp.com";
+const CORP_AI_API = "https://corp.sandjayacorp.com";
 
 type Pm2Proc = { name: string; status?: string; pm_id?: number; cpu?: number; memory?: number };
 
@@ -164,12 +164,12 @@ const kpis = [
 ];
 
 const agents = [
-  { name: "DumbDumb", role: "Secretary AI", status: "Online", color: "var(--gradient-blue)", initial: "D", d1: "Memory Active", d2: "Voice Standby", dot: "var(--success)", highlight: false },
-  { name: "Momot", role: "Task Dispatcher", status: "Running", color: "var(--gradient-purple)", initial: "M", d1: "Queue 7 Tasks", d2: "Auto Chain On", dot: "var(--purple-soft)", highlight: false },
-  { name: "Gentho", role: "PC Executor", status: "Connected", color: "var(--gradient-green)", initial: "G", d1: "Screen Control", d2: "Chrome Attach", dot: "var(--success)", highlight: false },
-  { name: "Bot CEO", role: "Strategic Planner", status: "Planning", color: "var(--gradient-orange)", initial: "B", d1: "Mode", d2: "Approval Req.", dot: "var(--orange-soft)", highlight: true },
-  { name: "Tubang", role: "Data Collector", status: "Active", color: "var(--gradient-pink)", initial: "T", d1: "Web Monitor", d2: "Real-time", dot: "var(--success)", highlight: false },
-  { name: "Trading Bot", role: "Market Analyst", status: "Active", color: "var(--gradient-primary)", initial: "₿", d1: "Market Scan", d2: "24/7 Running", dot: "var(--success)", highlight: false },
+  { name: "DumbDumb", role: "Secretary AI", status: "Online", color: "var(--gradient-blue)", initial: "D", d1: "Memory Active", d2: "Voice Standby", dot: "var(--success)", highlight: false, url: "https://corp.sandjayacorp.com/dumbdumb-visual" },
+  { name: "Momot", role: "Task Dispatcher", status: "Running", color: "var(--gradient-purple)", initial: "M", d1: "Queue 7 Tasks", d2: "Auto Chain On", dot: "var(--purple-soft)", highlight: false, url: "https://corp.sandjayacorp.com/dashboard" },
+  { name: "PakCEO", role: "Strategic Planner", status: "Planning", color: "var(--gradient-orange)", initial: "C", d1: "Mode", d2: "Approval Req.", dot: "var(--orange-soft)", highlight: true, url: "https://corp.sandjayacorp.com/pakceo-dashboard" },
+  { name: "PakCFO", role: "Finance Analyst", status: "Online", color: "var(--gradient-green)", initial: "F", d1: "Revenue Track", d2: "Daily Report", dot: "var(--success)", highlight: false, url: "https://corp.sandjayacorp.com/pakcfo-dashboard" },
+  { name: "Lik Yapto", role: "Trading Bot", status: "Active", color: "var(--gradient-primary)", initial: "₿", d1: "Market Scan", d2: "24/7 Running", dot: "var(--success)", highlight: false, url: "https://corp.sandjayacorp.com/lik-yapto" },
+  { name: "Sharly", role: "WA Outreach", status: "Active", color: "var(--gradient-pink)", initial: "S", d1: "WA Outreach", d2: "Lead Follow-up", dot: "var(--success)", highlight: false, url: "https://corp.sandjayacorp.com/sharly-dashboard" },
 ];
 
 
@@ -431,9 +431,9 @@ export function DashboardContent() {
                   )}
                 </span>
               </h2>
-              <button className="text-xs font-medium px-3 py-2 rounded-xl border border-border hover:bg-secondary transition-all duration-300 ease-[cubic-bezier(0.25,0.46,0.45,0.94)] inline-flex items-center gap-1 group">
+              <a href="https://corp.sandjayacorp.com/corp-ai-dashboard" target="_blank" className="text-xs font-medium px-3 py-2 rounded-xl border border-border hover:bg-secondary transition-all duration-300 ease-[cubic-bezier(0.25,0.46,0.45,0.94)] inline-flex items-center gap-1 group">
                 Lihat Semua Agent <ChevronRight className="w-3 h-3 transition-transform duration-300 ease-[cubic-bezier(0.25,0.46,0.45,0.94)] group-hover:translate-x-0.5" />
-              </button>
+              </a>
             </div>
             <m.div
               className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-6 gap-3"
@@ -467,9 +467,9 @@ export function DashboardContent() {
                     <p className="text-[11px] font-semibold text-foreground/90 leading-tight">{a.d1}</p>
                     <p className="text-[10px] text-muted-foreground leading-tight mt-0.5">{a.d2}</p>
                   </div>
-                  <button className="mt-2 w-full h-7 rounded-lg bg-card border border-border flex items-center justify-center hover:gradient-primary hover:text-white hover:border-transparent transition-all duration-300 ease-[cubic-bezier(0.25,0.46,0.45,0.94)] group">
+                  <a href={a.url ?? "https://corp.sandjayacorp.com/corp-ai-dashboard"} target="_blank" className="mt-2 w-full h-7 rounded-lg bg-card border border-border flex items-center justify-center hover:gradient-primary hover:text-white hover:border-transparent transition-all duration-300 ease-[cubic-bezier(0.25,0.46,0.45,0.94)] group">
                     <ChevronRight className="w-3.5 h-3.5 transition-transform duration-300 ease-[cubic-bezier(0.25,0.46,0.45,0.94)] group-hover:translate-x-0.5" />
-                  </button>
+                  </a>
                 </m.div>
               ))}
             </m.div>

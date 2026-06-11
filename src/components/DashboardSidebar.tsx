@@ -23,8 +23,8 @@ export function DashboardSidebar() {
           <Sparkles className="w-5 h-5 text-white" />
         </div>
         <div>
-          <h1 className="text-[17px] font-bold leading-tight tracking-[-0.02em]">DumbDumb Corp AI</h1>
-          <p className="text-[12px] text-muted-foreground">AI Corporation Command Center</p>
+          <h1 className="text-[17px] font-bold leading-tight tracking-[-0.02em]">Sandjaya Corp</h1>
+          <p className="text-[12px] text-muted-foreground">Corp AI Command Center</p>
         </div>
       </div>
 
